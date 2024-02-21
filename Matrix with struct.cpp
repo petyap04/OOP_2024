@@ -46,7 +46,12 @@ void printMatrix(const Matrix& mtx)
 		std::cout << std::endl;
 	}
 }
-
+void deleteMatrix(Matrix& mtx) {
+	for (size_t i = 0; i < mtx.colls; i++) {
+		delete[] mtx.mtx[i];
+	}
+	delete[]mtx.mtx;
+}
 int main()
 {
 	size_t rows, colls;
@@ -56,4 +61,6 @@ int main()
 	Matrix trans = { colls,rows,createMatrix(colls,rows) };
 	transp(trans, mtx);
 	printMatrix(trans);
+	deleteMatrix(mtx);
+	deleteMatrix(trans);
 }
