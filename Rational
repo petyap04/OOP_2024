@@ -1,0 +1,33 @@
+include <iostream>
+struct Rational
+{
+	int num;
+	int dom;
+};
+
+int gcd(int a, int b)
+{
+	if (a < b)
+		std::swap(a, b);
+	while (b != 0) {
+		int temp = a % b;
+		a = b;
+		b = temp;
+	}
+	return a;
+}
+
+Rational& sumOfRational(Rational& r1, const Rational& r2)
+{
+  assert(isValid(r1.dom) && isValid(r2.dom));
+	r1.num = r1.num * r2.dom + r2.num * r1.dom;
+	r1.dom *= r2.dom;
+	int gcdOfNumAndDom = gcd(r1.num, r1.dom);
+	r1.num /= gcdOfNumAndDom;
+	r1.dom /= gcdOfNumAndDom;
+	return r1;
+}
+int main(){
+  Rational r1 = {1, 4};
+  Rational r2 = {5, 6};
+}
