@@ -12,7 +12,7 @@ struct Matrix
 {
 	size_t rows;
 	size_t colls;
-	int** mtx = createMatrix(rows, colls);
+	int** mtx;
 };
 void readMatrix(Matrix& mtx)
 {
