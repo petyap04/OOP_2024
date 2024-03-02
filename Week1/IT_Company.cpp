@@ -35,7 +35,7 @@ namespace Employees {
 		case Position::unknown:return false;
 		}
 	}
-	Employee& initializeEmployee() {
+	Employee initializeEmployee() {
 		char name[100];
 		int position;
 		double salary;
