@@ -83,11 +83,7 @@ SafeAnswer getMoviePrice(const char* catalogName, const char* movieName) {
 
 Movie readMovie(std::ifstream& ifs) { //добавете аргумент - файлов поток за четене
     Movie m;
-    char buffer[100];
-    ifs.getline(buffer, 100, ' ');
-    strcpy_s(m.name, buffer);
-    ifs >> m.price;
-    ifs.ignore();
+    ifs >> m.name >> m.price;
     return m;
 }
 
