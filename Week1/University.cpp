@@ -54,7 +54,7 @@ namespace Students {
         case Major::unknown:return false;
         }
     }
-    Student& initializeStudent() {
+    Student initializeStudent() {
         int grade;
         int fn;
         char name[24];
