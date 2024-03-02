@@ -115,6 +115,7 @@ void sortMoviesInArray(Movie* arr, size_t size) { // добавете нужни
 void printTextInFile(std::ofstream& ofs, const Movie* arr, size_t size) {
     for (size_t i = 0; i < size; i++) {
         ofs << arr->name << " " << arr->price << std::endl;
+        arr++;
     }
 }
 ErrorInCatalog saveMoviesSorted(const char* catalogName, const char* catalogSortedName) {
