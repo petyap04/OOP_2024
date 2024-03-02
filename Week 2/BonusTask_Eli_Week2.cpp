@@ -115,12 +115,12 @@ void printTextInFile(std::ofstream& ofs, const Movie* arr, size_t size) {
     }
 }
 ErrorInCatalog saveMoviesSorted(const char* catalogName, const char* catalogSortedName) {
+  size_t countOfMovies = (getNumberOfMovies(catalogName)).number;
     std::ifstream ifs(catalogName);
     if (!ifs.is_open())
         return ErrorInCatalog::catalog_not_open;
     if (!*catalogName)
         return ErrorInCatalog::read_from_empty_catalog;
-    size_t countOfMovies = (getNumberOfMovies(catalogName)).number;
     Movie* arr = saveMoviesInArray(ifs, countOfMovies);
     sortMoviesInArray(arr, countOfMovies);
     std::ofstream ofs(catalogSortedName);
