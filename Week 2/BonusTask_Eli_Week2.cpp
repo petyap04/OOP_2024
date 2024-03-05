@@ -21,9 +21,12 @@ unsigned int getSymbolCount(std::ifstream& ifs, char symbol) {
     int count = 0;
     while (true) {
         char ch = ifs.get();
-        if (ifs.eof())break;
-        if (ch == symbol)
+        if (ifs.eof()){
+            break;
+        }
+        if (ch == symbol){
             count++;
+        }
     }
     return count;
 }
@@ -32,29 +35,31 @@ unsigned int getLinesCount(std::ifstream& ifs) {
 }
 SafeAnswer getNumberOfMovies(const char* catalogName) {
     std::ifstream ifs(catalogName);
-    if (!ifs.is_open())
+    if (!ifs.is_open()){
         return { 0, ErrorInCatalog::catalog_not_open };
+    }
     int countOfMovies = 0;
-    if (!*catalogName)
+    if (!*catalogName){
         return { countOfMovies, ErrorInCatalog::read_from_empty_catalog };
+    }
     countOfMovies = getLinesCount(ifs);
     return { countOfMovies, ErrorInCatalog::no_error_occurred };
 }
 SafeAnswer averagePrice(const char* catalogName) {
     std::ifstream ifs(catalogName);
-    if (!ifs.is_open())
+    if (!ifs.is_open()){
         return { 0, ErrorInCatalog::catalog_not_open };
+    }
     int averagePrice = 0;
     int countOfMovies = 0;
-    if (!*catalogName)
+    if (!*catalogName){
         return { averagePrice , ErrorInCatalog::read_from_empty_catalog };
+    }
     while (!ifs.eof()) {
         int currentPrice = 0;
         char buffer[100];
-        ifs.getline(buffer, 100, ' ');
-        ifs >> currentPrice;
+        ifs >> buffer >> currentPrice;
         averagePrice += currentPrice;
-        ifs.ignore();
         countOfMovies++;
     }
     averagePrice /= countOfMovies;
@@ -62,20 +67,21 @@ SafeAnswer averagePrice(const char* catalogName) {
 }
 SafeAnswer getMoviePrice(const char* catalogName, const char* movieName) {
     std::ifstream ifs(catalogName);
-    if (!ifs.is_open())
+    if (!ifs.is_open()){
         return { 0, ErrorInCatalog::catalog_not_open };
+    }
     int price = 0;
-    if (!*catalogName)
+    if (!*catalogName){
         return { price , ErrorInCatalog::read_from_empty_catalog };
+    }
     while (!ifs.eof()) {
         char buffer[100];
-        ifs.getline(buffer, 100, ' ');
+        ifs >> buffer;
         if (std::strcmp(buffer, movieName) == 0) {
             ifs >> price;
             return { price , ErrorInCatalog::no_error_occurred };
         }
         ifs >> price;
-        ifs.ignore();
     }
     price = 0;
     return{ price , ErrorInCatalog::movie_not_in_catalog };
@@ -101,11 +107,13 @@ void sortMoviesInArray(Movie* arr, size_t size) { // добавете нужни
     for (size_t i = 0; i < size - 1; i++) {
         int indexOfMinEl = i;
         for (size_t j = 0; j < size; j++) {
-            if (arr[indexOfMinEl].price > arr[j].price)
+            if (arr[indexOfMinEl].price > arr[j].price){
                 indexOfMinEl = j;
+            }
         }
-        if(i!=indexOfMinEl)
+        if(i != indexOfMinEl){
             std::swap(arr[i], arr[indexOfMinEl]);
+        }
    }
 }
 void printTextInFile(std::ofstream& ofs, const Movie* arr, size_t size) {
@@ -117,15 +125,18 @@ void printTextInFile(std::ofstream& ofs, const Movie* arr, size_t size) {
 ErrorInCatalog saveMoviesSorted(const char* catalogName, const char* catalogSortedName) {
   size_t countOfMovies = (getNumberOfMovies(catalogName)).number;
     std::ifstream ifs(catalogName);
-    if (!ifs.is_open())
+    if (!ifs.is_open()){
         return ErrorInCatalog::catalog_not_open;
-    if (!*catalogName)
+    }
+    if (!*catalogName){
         return ErrorInCatalog::read_from_empty_catalog;
+    }
     Movie* arr = saveMoviesInArray(ifs, countOfMovies);
     sortMoviesInArray(arr, countOfMovies);
     std::ofstream ofs(catalogSortedName);
-    if (!ofs.is_open())
+    if (!ofs.is_open()){
         return ErrorInCatalog::catalog_not_open;
+    }
     printTextInFile(ofs, arr, countOfMovies);
     freeMoviesFromArray(arr);
     return ErrorInCatalog::no_error_occurred;
