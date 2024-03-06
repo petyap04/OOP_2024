@@ -2,7 +2,7 @@
 #include <fstream>
 constexpr int SIZE = 4;
 
-enum Errorlist {
+enum class Errorlist {
 	the_file_is_not_open,
 	empty_file,
 	no_more_text_in_the_file, 
