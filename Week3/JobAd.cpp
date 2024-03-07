@@ -21,7 +21,7 @@ void printOffer(const JobAd& j) {
 
 void writeInTheFile(const char* file, unsigned int n) {
 
-	std::ofstream writeInFile(file, std::ios::binary || std::ios::app);
+	std::ofstream writeInFile(file, std::ios::binary | std::ios::app);
 
 	if (!writeInFile.is_open()) {
 		return;
@@ -37,7 +37,7 @@ void writeInTheFile(const char* file, unsigned int n) {
 }
 void filterOffers(const char* filePath, long long minSalary) {
 
-	std::ifstream readFromFile(filePath, std::ios::binary || std::ios::app);
+	std::ifstream readFromFile(filePath, std::ios::binary | std::ios::app);
 
 	if (!readFromFile.is_open()) {
 		return;
@@ -55,7 +55,7 @@ void filterOffers(const char* filePath, long long minSalary) {
 }
 bool existOffer(const char* filePath, const char* name) {
 
-	std::ifstream readFromFile(filePath, std::ios::binary || std::ios::app);
+	std::ifstream readFromFile(filePath, std::ios::binary | std::ios::app);
 
 	if (!readFromFile.is_open()) {
 		return false;
@@ -77,7 +77,7 @@ void perfectOffer(const char* filePath, int maxCoworkers, int minVacancyDays, in
 	std::ifstream readFromFile(filePath, std::ios::binary);
 	std::ofstream writeInFile("result.txt", std::ios::binary);
 
-	if (!readFromFile.is_open() && !writeInFile.is_open()) {
+	if (!readFromFile.is_open() || !writeInFile.is_open()) {
 		return;
 	}
 
@@ -92,7 +92,7 @@ void perfectOffer(const char* filePath, int maxCoworkers, int minVacancyDays, in
 
 void showAllOffers(const char* filePath) {
 
-	std::ifstream readFromFile(filePath, std::ios::binary || std::ios::app);
+	std::ifstream readFromFile(filePath, std::ios::binary | std::ios::app);
 
 	if (!readFromFile.is_open()) {
 		return;
