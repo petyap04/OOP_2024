@@ -5,7 +5,7 @@ struct JobAd {
 	long long payment;
 	unsigned int empoyees;
 	unsigned int holidays;
-    char name[25];
+        char name[25];
 };
 
 JobAd& initialJob(JobAd& j) {
