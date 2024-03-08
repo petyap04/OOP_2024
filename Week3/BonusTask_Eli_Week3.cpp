@@ -29,24 +29,11 @@ struct PokemonHandler {
     const char* file;
 };
 
-Type readType(unsigned int number) {
-    switch (number) {
-    case 0:return Type::NORMAL;
-    case 1:return Type::FIRE;
-    case 2:return Type::WATER;
-    case 3:return Type::GRASS;
-    case 4:return Type::ELECTRIC;
-    case 5:return Type::GHOST;
-    case 6:return Type::FLYING;
-    default:return Type::UNKNOWN;
-    }
-}
-
 Pokemon initialize() {
     Pokemon p;
     unsigned int type;
     std::cin >> type;
-    Type t = readType(type);
+    Type t = (Type)type;
 
     assert(t != Type::UNKNOWN);
 
@@ -60,7 +47,7 @@ Pokemon initializeFromFile(std::ifstream& ifs) {
     Pokemon p;
     unsigned int type;
     ifs.read((char*)&type, sizeof(type));
-    Type t = readType(type);
+    Type t = (Type)type;
 
     assert(t != Type::UNKNOWN);
 
@@ -150,13 +137,25 @@ void insert(const PokemonHandler& ph, const Pokemon& pokemon) {
     writePokemonInFile(pokemon, ph.file, index);
 }
 
+void readFromFileAndWriteInAnotherFile(const char* readMeFile, const char* writeMeFile) {
+    std::ifstream ifs(readMeFile, std::ios::binary);
+    int index = 0;
+    while (!ifs.eof()) {
+        Pokemon p = initializeFromFile(ifs);
+        writePokemonInFile(p, writeMeFile, index);
+        index += sizeof(Pokemon);
+    }
+    ifs.close();
+}
 void textify(const PokemonHandler& ph, const char* filename) {
+    readFromFileAndWriteInAnotherFile(ph.file, filename);
+}
 
+void untextify(const PokemonHandler& ph, const char* filename) {
+    readFromFileAndWriteInAnotherFile(filename, ph.file);
 }
 
 int main()
 {
-    /*Pokemon p = initializeFromFile("readFile.txt");
-    writePokemonInFile(p, "writeFile.txt");*/
-
+    
 }
