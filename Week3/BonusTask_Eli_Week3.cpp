@@ -14,8 +14,7 @@ enum class Type {
     GRASS,
     ELECTRIC,
     GHOST,
-    FLYING, 
-    UNKNOWN
+    FLYING
 };
 
 struct Pokemon {
@@ -32,33 +31,29 @@ struct PokemonHandler {
 Pokemon initialize() {
     Pokemon p;
     unsigned int type;
-    std::cin >> type;
-    Type t = (Type)type;
-
-    assert(t != Type::UNKNOWN);
-
-    std::cin >> p.strength >> p.name;
-    p.t = t;
+    std::cin >> type >> p.strength >> p.name;
+    p.t = (Type)type;
     return p;
 }
 
-Pokemon initializeFromFile(std::ifstream& ifs) {
+Pokemon initializeFromBinaryFile(std::ifstream& ifs) {
 
     Pokemon p;
     unsigned int type;
-    ifs.read((char*)&type, sizeof(type));
-    Type t = (Type)type;
-
-    assert(t != Type::UNKNOWN);
-
-    ifs.read((char*)&p.strength, sizeof(p.strength));
-    ifs.read((char*)&p.name, sizeof(p.name));
-    p.t = t;
-
+    ifs.read((char*)&p, sizeof(p));
+   
     return p;
 }
 
-void writePokemonInFile(const Pokemon& p, const char* file, int index) {
+Pokemon initializeFromTextFile(std::ifstream& ifs) {
+    Pokemon p;
+    unsigned int type;
+    ifs >> type>> p.strength >> p.name;
+    p.t  = (Type)type;
+    return p;
+}
+
+void writePokemonInBinatyFile(const Pokemon& p, const char* file, int index) {
     std::ofstream ofs(file, std::ios::binary | std::ios::ate);
 
     if (!ofs.is_open()) {
@@ -66,17 +61,18 @@ void writePokemonInFile(const Pokemon& p, const char* file, int index) {
     }
 
     ofs.seekp(index, std::ios::beg);
-    unsigned int type = (int)p.t;
-    ofs.write((const char*)&type, sizeof(type));
-    ofs.write((const char*)&p.strength, sizeof(p.strength));
-    ofs.write((const char*)&p.name, sizeof(p.name));
+    ofs.write((const char*)&p, sizeof(p));
 
     ofs.close();
 }
 
+void writePokemonInTextFile(const Pokemon& p, std::ofstream& ofs) {
+    ofs << p.strength << (int)p.t << p.name;
+}
+
 PokemonHandler newPokemonHandler(const char* filename) {
     PokemonHandler p;
-    p.file = filename;
+    strcmp(filename, p.file);
     return p;
 }
 
@@ -106,9 +102,8 @@ Pokemon at(const PokemonHandler& ph, int i) {
         return p;
     }
 
-    int begOfPokemon = (i / sizeof(Pokemon)) * sizeof(Pokemon);
-    ifs.seekg(begOfPokemon, std::ios::beg);
-    p = initializeFromFile(ifs);
+    ifs.seekg(i * sizeof(Pokemon), std::ios::beg);
+    p = initializeFromBinaryFile(ifs);
 
     ifs.close();
     return p;
@@ -124,35 +119,54 @@ void swap(const PokemonHandler& ph, int i, int j) {
     Pokemon p2 = at(ph, j);
     assert(p1.err != ErrorList::the_file_can_not_be_open && p2.err != ErrorList::the_file_can_not_be_open);
 
-    int begOfPokemon1 = (i / sizeof(Pokemon)) * sizeof(Pokemon);
-    int begOfPokemon2 = (j / sizeof(Pokemon)) * sizeof(Pokemon);
-
-    writePokemonInFile(p1, ph.file, begOfPokemon2);
-    writePokemonInFile(p2, ph.file, begOfPokemon1);
+    writePokemonInBinatyFile(p1, ph.file, j * sizeof(Pokemon));
+    writePokemonInBinatyFile(p2, ph.file, i * sizeof(Pokemon));
 
 }
 
 void insert(const PokemonHandler& ph, const Pokemon& pokemon) {
     int index = size(ph);
-    writePokemonInFile(pokemon, ph.file, index);
+    writePokemonInBinatyFile(pokemon, ph.file, index);
+
+    Pokemon p1 = at(ph, index);
+
+    while (p1.strength > pokemon.strength) {
+        swap(ph, index, index + 1);
+        p1 = at(ph, --index);
+    }
 }
 
-void readFromFileAndWriteInAnotherFile(const char* readMeFile, const char* writeMeFile) {
-    std::ifstream ifs(readMeFile, std::ios::binary);
-    int index = 0;
+void textify(const PokemonHandler& ph, const char* filename) {
+    std::ifstream ifs(ph.file, std::ios::binary);
+    std::ofstream ofs(filename, std::ios::app);
+
+    if (!ifs.is_open() || !ofs.is_open()) {
+        return;
+    }
+
     while (!ifs.eof()) {
-        Pokemon p = initializeFromFile(ifs);
-        writePokemonInFile(p, writeMeFile, index);
-        index += sizeof(Pokemon);
+        Pokemon p = initializeFromBinaryFile(ifs);
+        writePokemonInTextFile(p, ofs);
     }
     ifs.close();
-}
-void textify(const PokemonHandler& ph, const char* filename) {
-    readFromFileAndWriteInAnotherFile(ph.file, filename);
+    ofs.close();
 }
 
 void untextify(const PokemonHandler& ph, const char* filename) {
-    readFromFileAndWriteInAnotherFile(filename, ph.file);
+    std::ifstream ifs(filename, std::ios::app);
+
+    if (!ifs.is_open()) {
+        return;
+    }
+
+    int index = 0;
+    while (!ifs.eof()) {
+        Pokemon p = initializeFromTextFile(ifs);
+        writePokemonInBinatyFile(p, ph.file, index);
+        index += sizeof(Pokemon);
+    }
+
+    ifs.close();
 }
 
 int main()
