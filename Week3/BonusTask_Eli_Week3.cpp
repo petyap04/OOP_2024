@@ -72,7 +72,7 @@ void writePokemonInTextFile(const Pokemon& p, std::ofstream& ofs) {
 
 PokemonHandler newPokemonHandler(const char* filename) {
     PokemonHandler p;
-    strcmp(filename, p.file);
+    strcpy(filename, p.file);
     return p;
 }
 
