@@ -27,7 +27,7 @@ struct Pizza {
 	double priceOfPizza;
 };
 
-struct DelivaryPizza {
+struct DeliveryPizza {
 	char client[MAX_SIZE_OF_NAME];
 	int number[MAX_SIZE_OF_NUMBER];
 	char adress[MAX_SIZE_OF_ADRESS];
@@ -35,7 +35,7 @@ struct DelivaryPizza {
 	int count;
 };
 
-void readDelivaryInBinaryFile(const DelivaryPizza& dp, std::ifstream& ifs) {
+void readDeliveryInBinaryFile(DeliveryPizza& dp, std::ifstream& ifs) {
 
 	ifs.read((char*)&dp, sizeof(dp));
 
@@ -45,7 +45,7 @@ void readDelivaryInBinaryFile(const DelivaryPizza& dp, std::ifstream& ifs) {
 	}
 }
 
-void readDelivariesFromBinaryFile(DelivaryPizza* arr, size_t size, const char* file) {
+void readDeliveriesFromBinaryFile(DeliveryPizza* arr, size_t size, const char* file) {
 	std::ifstream ifs(file, std::ios::binary);
 
 	if (!ifs.is_open()) {
@@ -53,13 +53,13 @@ void readDelivariesFromBinaryFile(DelivaryPizza* arr, size_t size, const char* f
 	}
 
 	for (int i = 0; i < size; i++) {
-		readDelivaryInBinaryFile(arr[i], ifs);
+		readDeliveryInBinaryFile(arr[i], ifs);
 	}
 
 	ifs.close();
 }
 
-void writeDelivaryInBinaryFile(const DelivaryPizza& dp, std::ofstream& ofs) {
+void writeDeliveryInBinaryFile(const DeliveryPizza& dp, std::ofstream& ofs) {
 	ofs.write((const char*)&dp, sizeof(dp));
 
 	for (int i = 0; i < dp.count; i++) {
@@ -68,7 +68,7 @@ void writeDelivaryInBinaryFile(const DelivaryPizza& dp, std::ofstream& ofs) {
 	}
 }
 
-void writeDelivariesInBinaryFile(const DelivaryPizza* arr, size_t size, const char* file) {
+void writeDeliveriesInBinaryFile(const DeliveryPizza* arr, size_t size, const char* file) {
 	std::ofstream ofs(file, std::ios::binary);
 
 	if (!ofs.is_open()) {
@@ -76,12 +76,12 @@ void writeDelivariesInBinaryFile(const DelivaryPizza* arr, size_t size, const ch
 	}
 
 	for (int i = 0; i < size; i++) {
-		writeDelivaryInBinaryFile(arr[i], ofs);
+		writeDeliveryInBinaryFile(arr[i], ofs);
 	}
 	ofs.close();
 }
 
-void sortArr(DelivaryPizza* arr, size_t size) {
+void sortArr(DeliveryPizza* arr, size_t size) {
 	for (int i = 0; i < size - 1; i++) {
 		int indexOfMinEl = i;
 		for (int j = i + 1; j < size; j++) {
@@ -92,11 +92,11 @@ void sortArr(DelivaryPizza* arr, size_t size) {
 		std::swap(arr[i], arr[indexOfMinEl]);
 	}
 }
-void sortByAdressDelivariesInNewFile(const char* file, const char* newFile, DelivaryPizza* arr, int numberOfDeliveries) {
+void sortByAdressDeliveriesInNewFile(const char* file, const char* newFile, DeliveryPizza* arr, int numberOfDeliveries) {
 	
-	readDelivariesFromBinaryFile(arr, numberOfDeliveries, file);
+	readDeliveriesFromBinaryFile(arr, numberOfDeliveries, file);
 	sortArr(arr, numberOfDeliveries);
-	writeDelivariesInBinaryFile(arr, numberOfDeliveries, newFile);
+	writeDeliveriesInBinaryFile(arr, numberOfDeliveries, newFile);
 }
 int main()
 {	
