@@ -4,7 +4,7 @@
 #include "1_SI_1_6_1MI0600311_2.h"
 #pragma warning (disable : 4996)
 
-
+Time::Time() = default;
 Time::Time(unsigned hours, unsigned mins, unsigned seconds) {
     setHours(hours);
     setMins(mins);
@@ -69,7 +69,13 @@ void printOneGenre(char ch) {
 }
 
 
-
+Song::Song()=default;
+Song::Song(const char* name, const Time& t, const char* genre, const char* file) {
+    setName(name);
+    setDuration(t);
+    setGenre(genre);
+    setContent(file);
+}
 bool Song::setName(const char* name) {
     if (name) {
         strcpy(this->name, name);
@@ -189,6 +195,11 @@ void save(const Song& s, const char* filename) {
     ofs.close();
 }
 
+
+Playlist::Playlist() = default;
+Playlist::Playlist(const Song* songsArr, size_t countOfSongs) {
+    setSongsArr(songsArr, countOfSongs);
+}
 bool Playlist::setSongsArr(const Song* songsArr, size_t countOfSongs) {
     if (countOfSongs <= MAX_SONGS_IN_PLAYLIST) {
         for (int i = 0; i < countOfSongs; i++) {
