@@ -26,7 +26,7 @@ class Time {
             return false;
     }
 public:
-    Time() = default;
+    Time();
     Time(unsigned hours, unsigned mins, unsigned seconds);
     unsigned getWholeInSec()const;
     unsigned getHours() const;
@@ -46,13 +46,8 @@ class Song {
     char genre;
     char content[SIZE_OF_CONTENT] = "";
 public:
-    Song() = default;
-    Song(const char* name, const Time& t, const char* genre, const char* file) {
-        setName(name);
-        setDuration(t);
-        setGenre(genre);
-        setContent(file);
-    }
+    Song();
+    Song(const char* name, const Time& t, const char* genre, const char* file);
     bool setName(const char* name);
     void setDuration(const Time& t);
     bool setGenre(const char* genre);
@@ -72,10 +67,8 @@ class Playlist {
     Song songsArr[MAX_SONGS_IN_PLAYLIST];
     size_t countOfSongsInThePlaylist = 0;
 public:
-    Playlist() = default;
-    Playlist(const Song* songsArr, size_t countOfSongs) {
-        setSongsArr(songsArr, countOfSongs);
-    }
+    Playlist();
+    Playlist(const Song* songsArr, size_t countOfSongs);
     bool setSongsArr(const Song* songsArr, size_t countOfSongs);
     size_t getCountOfSongs()const;
     Song findSong(const char* name) const;
