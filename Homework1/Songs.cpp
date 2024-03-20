@@ -168,23 +168,19 @@ void Song::printSong() const {
 void printContentOfSong(const char* str) {
     std::cout << str;
 }
-void mix(char* newContent, const char* biggerStr, const char* smallerStr, unsigned int minlen) {
-    int maxlen = strlen(biggerStr);
-    for (int i = 0; i < maxlen; i++) {
-        if (minlen + i >= maxlen) {
-            newContent[minlen - i] = biggerStr[i];
-            newContent[minlen - i] ^= smallerStr[minlen-i];
-        }
-    }
-}
+
 void mixTwoSongs(Song& s1, const Song& s2) {
     char newContent[SIZE_OF_CONTENT] = "";
-    if (strlen(s1.getContent()) < strlen(s2.getContent())) {
-        mix(newContent, s2.getContent(), s1.getContent(), strlen(s1.getContent()));
+  
+    int lenOfs1 = strlen(s1.getContent());
+    int lenOfs2 = strlen(s2.getContent());
+    for (int i = 0; i < lenOfs1; i++) {
+        newContent[i] = s1.getContent()[i];
+        if (i < lenOfs2) {
+            newContent[i] ^= s2.getContent()[i];
+        }
     }
-    else {
-        mix(newContent, s1.getContent(), s2.getContent(), strlen(s2.getContent()));
-    }
+
     s1.setContentAfterMix(newContent);
 }
 
@@ -321,5 +317,5 @@ int main()
     p.printPlaylist();
     printContentOfSong(s1.getContent());
     printContentOfSong(s2.getContent());
-    mixTwoSongs(s1, s3);
+    mixTwoSongs(s1, s2);
 }
