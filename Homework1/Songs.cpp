@@ -74,7 +74,7 @@ Song::Song(const char* name, const Time& t, const char* genre, const char* file)
     setName(name);
     setDuration(t);
     setGenre(genre);
-    setContent(file);
+    setContentFromFile(file);
 }
 bool Song::setName(const char* name) {
     if (name) {
@@ -101,7 +101,7 @@ bool Song::setGenre(const char* genre) {
     }
     return true;
 }
-bool Song::setContent(const char* file) {
+bool Song::setContentFromFile(const char* file) {
     std::ifstream ifs(file, std::ios::binary);
     if (!ifs.is_open()) {
         return false;
@@ -110,6 +110,13 @@ bool Song::setContent(const char* file) {
     ifs.read(content, sizeof(char) * SIZE_OF_CONTENT);
     ifs.close();
     return true;
+}
+bool Song::setContentAfterMix(char* newContent) {
+    if (newContent) {
+        strcpy(content, newContent);
+        return true;
+    }
+    return false;
 }
 
 
@@ -161,29 +168,24 @@ void Song::printSong() const {
 void printContentOfSong(const char* str) {
     std::cout << str;
 }
-
+void mix(char* newContent, const char* biggerStr, const char* smallerStr, unsigned int minlen) {
+    int maxlen = strlen(biggerStr);
+    for (int i = 0; i < maxlen; i++) {
+        if (minlen + i >= maxlen) {
+            newContent[minlen - i] = biggerStr[i];
+            newContent[minlen - i] ^= smallerStr[minlen-i];
+        }
+    }
+}
 void mixTwoSongs(Song& s1, const Song& s2) {
     char newContent[SIZE_OF_CONTENT] = "";
-    int s1len = strlen(s1.getContent());
-    int s2len = strlen(s2.getContent());
-    int min = (s1len < s2len ? s1len : s2len);
-    if (min == s1len) {
-        for (int i = 0; i < s2len; i++) {
-            newContent[i] = s2.getContent()[i];
-            if (s1len + i >= s2len) {
-                newContent[i] ^= s1.getContent()[i];
-            }
-        }
+    if (strlen(s1.getContent()) < strlen(s2.getContent())) {
+        mix(newContent, s2.getContent(), s1.getContent(), strlen(s1.getContent()));
     }
     else {
-        for (int i = 0; i < s1len; i++) {
-            newContent[i] = s1.getContent()[i];
-            if (s1len + i >= s1len) {
-                newContent[i] ^= s2.getContent()[i];
-            }
-        }
+        mix(newContent, s1.getContent(), s2.getContent(), strlen(s2.getContent()));
     }
-    s1.setContent(newContent);
+    s1.setContentAfterMix(newContent);
 }
 
 void save(const Song& s, const char* filename) {
@@ -319,7 +321,5 @@ int main()
     p.printPlaylist();
     printContentOfSong(s1.getContent());
     printContentOfSong(s2.getContent());
-    mixTwoSongs(s1, s2);
-  
-
+    mixTwoSongs(s1, s3);
 }
