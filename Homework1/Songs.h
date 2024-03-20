@@ -51,7 +51,8 @@ public:
     bool setName(const char* name);
     void setDuration(const Time& t);
     bool setGenre(const char* genre);
-    bool setContent(const char* file);
+    bool setContentFromFile(const char* file);
+    bool setContentAfterMix(char* newContent);
 
     const char* getName()const;
     Time getDurationInSeconds()const;
