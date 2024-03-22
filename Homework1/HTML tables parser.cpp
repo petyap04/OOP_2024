@@ -269,8 +269,9 @@ void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t c
     }
     else {
         ifs.seekg(currentPos + 1);
-        readTableFromFile(ifs, t, currentCol, currentRow);
     }
+    readTableFromFile(ifs, t, currentCol, currentRow);
+
 }
 
 void readFile(FileHandler& fh, Table& t) {
