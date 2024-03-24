@@ -4,12 +4,6 @@
 #include "Table.h"
 #pragma warning(disable:4996)
 
-constexpr char DEF_OF_TABLE[] = "table";
-constexpr int MAX_SIZE_OF_TAG = 7;
-constexpr int SIZE_OF_CHARECTER_REFERENCE = 2;
-constexpr char REFERENCE[SIZE_OF_CHARECTER_REFERENCE + 1] = "&#";
-
-
 enum class ErrorList {
     the_file_is_not_open,
     empty_file,
@@ -46,26 +40,26 @@ void Table::swapTwoRows(int index1, int index2) {
     std::swap(rows[index1], rows[index2]);
 }
 
-void Table::writeRowInTable(Row& r, const Row& rowToAdd, size_t size) {
-    for (int i = 0; i < size; i++) {
-        strcpy(r.row[i], rowToAdd.row[i]);
+void Table::writeRowInTable(const Row& rowToAdd, int indexOfRow, size_t size) {
+    for (int i = 1; i < size; i++) {
+        strcpy(rows[indexOfRow].row[i], rowToAdd.row[i - 1]);
     }
 }
 
 void Table::add(size_t rowNumber, const Row& rowToAdd) {
-    if (countOfRows < MAX_ROW && rowNumber < MAX_ROW) {
+    if (countOfRows > MAX_ROW && rowNumber > MAX_ROW) {
         return;
     }
 
-    writeRowInTable(rows[countOfRows], rowToAdd, countOfRows);
-
+    writeRowInTable(rowToAdd, countOfRows + 1, countOfColls);
+    setCountOfRows(countOfRows + 1);
     size_t currentIndex = countOfRows;
     while (currentIndex >= rowNumber) {
         std::swap(rows[currentIndex - 1], rows[currentIndex]);
         currentIndex--;
     }
-
-    setCountOfRows(countOfRows + 1);
+    print();
+    
 }
 
 void Table::remove(size_t rowNumber) {
@@ -97,19 +91,20 @@ void Table::print()const {
         for (int j = 1; j <= countOfColls; j++) {
             int currentIndex = strlen(rows[i].row[j]);
             if (i == 1) {
-                std::cout << '*' << rows[i].row[j];
-                while (currentIndex < (int)rows[0].row[j]) {
+                std::cout << "|" << '*' << rows[i].row[j];
+                while ((char)currentIndex < rows[0].row[j][0]) {
                     std::cout << " ";
                     currentIndex++;
                 }
-                std::cout << "*";
+                std::cout << "*" << "|";
             }
             else {
-                std::cout << rows[i].row[j];
-                while (currentIndex < (int)rows[0].row[j]) {
+                std::cout << "|" << " " << rows[i].row[j];
+                while ((char)currentIndex < rows[0].row[j][0]) {
                     std::cout << " ";
                     currentIndex++;
                 }
+                std::cout << " " << "|";
             }
         }
         std::cout << std::endl;
@@ -125,6 +120,10 @@ size_t Table::getCountOfRows() const {
 const Row& Table::getRow(int index) const {
     return rows[index];
 }
+const Field& Table::getFieldInRow(int indexOfRow, int indexOfColl) const {
+    return rows[indexOfRow].row[indexOfColl];
+}
+
 
 bool Table::setCountOfColls(size_t colls) {
     if (colls > 0) {
@@ -152,7 +151,7 @@ bool Table::setFieldInRow(const char* str, size_t indexOfRow, size_t indexOfColl
         return false;
     }
     strcpy(rows[indexOfRow].row[indexOfColl], str);
-    if (strcmp(rows[0].row[indexOfColl],"") == 0 || strlen(str) > (int)rows[0].row[indexOfColl]) {
+    if (strcmp(rows[0].row[indexOfColl],"") == 0 || (char)strlen(str) > rows[0].row[indexOfColl][0]) {
         setFieldInRow(strlen(str), 0, indexOfColl);
     }
     return true;
@@ -160,7 +159,7 @@ bool Table::setFieldInRow(const char* str, size_t indexOfRow, size_t indexOfColl
 
 
 class FileHandler {
-    const char* filename;
+    const char* filename="";
     Table table;
     ErrorList err = ErrorList::no_error;;
 public:
@@ -183,10 +182,8 @@ public:
     const ErrorList& getError()const {
         return err;
     }
-
-
-
 };
+
 void defTag(std::ifstream& ifs, TypeOfTags& tag, bool& isClosingTag) {
     char ch1 = ifs.get();
     if (ch1 == '<') {
@@ -258,15 +255,15 @@ void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t
     char buffer[MAX_SIZE_OF_FIELD];
     ifs.getline(buffer, MAX_SIZE_OF_FIELD, '>');
     if (tag == TypeOfTags::tr) {
-        if (currentCol > t.getCountOfColls()) {
-            t.setCountOfColls(currentCol);
-        }
         currentCol = 0;
         currentRow++;
         readTableFromFile(ifs, t, currentCol, currentRow, hasFoundClosingTableTag);
     }
     else {
         currentCol++;
+        if (currentCol > t.getCountOfColls()) {
+            t.setCountOfColls(currentCol);
+        }
         readTextBetweenTags(ifs, t, tag, currentCol, currentRow);
     }
 }
@@ -295,7 +292,6 @@ void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t c
     }
 }
     
-
 void readFile(FileHandler& fh, Table& t) {
     std::ifstream ifs(fh.getFile());
     if (!ifs.is_open()) {
@@ -306,7 +302,6 @@ void readFile(FileHandler& fh, Table& t) {
         fh.setError(ErrorList::empty_file);
         return;
     }
-
     while (true) {
         char ch = ifs.get();
         if (ifs.eof()) {
@@ -329,9 +324,32 @@ void readFile(FileHandler& fh, Table& t) {
             fh.setError(ErrorList::there_is_no_table_int_the_file);
         }
     }
-
     ifs.close();
 }
+
+void safeToFile(FileHandler& fh, const Table& t) {
+    std::ofstream ofs(fh.getFile());
+    if (!ofs.is_open()) {
+        return;
+    }
+    ofs << "<table>" << std::endl;
+    for (int i = 1; i <= t.getCountOfRows(); i++) {
+        ofs << "<tr>" << std::endl;
+        for (int j = 1; j <= t.getCountOfColls(); j++) {
+            if (i == 1) {
+                ofs << "<th>" << t.getFieldInRow(i, j) << "</th>" << std::endl;
+            }
+            else {
+                ofs << "<td>" << t.getFieldInRow(i, j) << "</td>" << std::endl;
+            }
+        }
+        ofs << "</tr>" << std::endl;
+    }
+    ofs << "</table>" << std::endl;
+
+    ofs.close();
+}
+
 int main()
 {
     FileHandler f;
@@ -339,4 +357,7 @@ int main()
     f.setFilename("HTML.txt");
     readFile(f, t);
     t.print();
+    Row toAdd = { "Petur Ivanov", "34", "12345" };
+    t.add(3, toAdd);
+    safeToFile(f, t);
 }
