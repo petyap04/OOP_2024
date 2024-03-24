@@ -6,6 +6,7 @@ constexpr int MAX_SIZE = 64;
 constexpr int SIZE_OF_CONTENT = 256;
 constexpr int MAX_SONGS_IN_PLAYLIST = 30;
 constexpr int COUNT_OF_GENRES = 5;
+constexpr int SIZE_OF_BIT = 8;
 
 constexpr unsigned SECONDS_IN_HOURS = 3600;
 constexpr unsigned SECONDS_IN_MINUTE = 60;
@@ -55,7 +56,7 @@ public:
     bool setContentAfterMix(char* newContent);
 
     const char* getName()const;
-    Time getDurationInSeconds()const;
+    const Time& getDurationInSeconds()const;
     char getGenre()const;
     const char* getContent()const;
 
