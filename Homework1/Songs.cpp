@@ -123,7 +123,7 @@ bool Song::setContentAfterMix(char* newContent) {
 const char* Song::getName()const {
     return name;
 }
-Time Song::getDurationInSeconds()const {
+const Time& Song::getDurationInSeconds()const {
     return duration;
 }
 char Song::getGenre()const {
@@ -135,8 +135,10 @@ const char* Song::getContent()const {
 
 
 void Song::changeEveryKBit(int k) {
-    for (int i = strlen(content) - 1; i >= 0; i--) {
-        content[i] |= (1 << (k - 1));
+    int sizeOfContent = strlen(content);
+    for (int i = k; i < sizeOfContent * SIZE_OF_BIT; i += k) {
+        int indexOfKofa = (sizeOfContent - 1) - i / SIZE_OF_BIT;
+        content[indexOfKofa] |= (1 << ((i % SIZE_OF_BIT) - 1));
     }
 }
 void Song::printGenre()const {
@@ -318,4 +320,6 @@ int main()
     printContentOfSong(s1.getContent());
     printContentOfSong(s2.getContent());
     mixTwoSongs(s1, s2);
+ 
+
 }
