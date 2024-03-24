@@ -94,22 +94,25 @@ void Table::edit(int rowNumber, int colNumber, const Field& f) {
 
 void Table::print()const {
     for (int i = 1; i <= countOfRows; i++) {
-        for (int j = 1; j < countOfColls; j++) {
+        for (int j = 1; j <= countOfColls; j++) {
             int currentIndex = strlen(rows[i].row[j]);
             if (i == 1) {
                 std::cout << '*' << rows[i].row[j];
-                while (currentIndex < (int)rows[i].row[0]) {
+                while (currentIndex < (int)rows[0].row[j]) {
                     std::cout << " ";
+                    currentIndex++;
                 }
                 std::cout << "*";
             }
             else {
                 std::cout << rows[i].row[j];
-                while (currentIndex < (int)rows[i].row[0]) {
+                while (currentIndex < (int)rows[0].row[j]) {
                     std::cout << " ";
+                    currentIndex++;
                 }
             }
         }
+        std::cout << std::endl;
     }
 }
 
@@ -149,8 +152,8 @@ bool Table::setFieldInRow(const char* str, size_t indexOfRow, size_t indexOfColl
         return false;
     }
     strcpy(rows[indexOfRow].row[indexOfColl], str);
-    if (strlen(str) > (int)rows[indexOfRow].row[0]) {
-        setFieldInRow(strlen(str), indexOfRow, 0);
+    if (strcmp(rows[0].row[indexOfColl],"") == 0 || strlen(str) > (int)rows[0].row[indexOfColl]) {
+        setFieldInRow(strlen(str), 0, indexOfColl);
     }
     return true;
 }
@@ -250,14 +253,17 @@ void readTextBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, si
         }
     }
 }
-void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow);
-void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t& currentCol, size_t& currentRow) {
+void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow, bool& hasFoundClosingTableTag);
+void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t& currentCol, size_t& currentRow, bool& hasFoundClosingTableTag) {
     char buffer[MAX_SIZE_OF_FIELD];
     ifs.getline(buffer, MAX_SIZE_OF_FIELD, '>');
     if (tag == TypeOfTags::tr) {
+        if (currentCol > t.getCountOfColls()) {
+            t.setCountOfColls(currentCol);
+        }
         currentCol = 0;
         currentRow++;
-        readTableFromFile(ifs, t, currentCol, currentRow);
+        readTableFromFile(ifs, t, currentCol, currentRow, hasFoundClosingTableTag);
     }
     else {
         currentCol++;
@@ -265,7 +271,7 @@ void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t
     }
 }
 
-void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow) {
+void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow, bool& hasFoundClosingTableTag) {
     if (ifs.eof()) {
         return;
     }
@@ -274,15 +280,19 @@ void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t c
     bool isClosingTag = false;
     defTag(ifs, tag, isClosingTag);
     if (tag == TypeOfTags::table) {
+        hasFoundClosingTableTag = true;
+        t.setCountOfRows(currentRow);
         return;
     }
     if (!isClosingTag && tag != TypeOfTags::is_not_tag) {
-        readBetweenTags(ifs, t, tag, currentCol, currentRow);
+        readBetweenTags(ifs, t, tag, currentCol, currentRow, hasFoundClosingTableTag);
     }
     else {
         ifs.seekg(currentPos + 1);
     }
-    readTableFromFile(ifs, t, currentCol, currentRow);
+    if (hasFoundClosingTableTag == false) {
+        readTableFromFile(ifs, t, currentCol, currentRow, hasFoundClosingTableTag);
+    }
 }
     
 
@@ -311,7 +321,8 @@ void readFile(FileHandler& fh, Table& t) {
             fh.setError(ErrorList::no_error);
             size_t currentCol = 0;
             size_t currentRow = 0;
-            readTableFromFile(ifs, t, currentCol, currentRow);
+            bool hasFoundClosingTableTag = false;
+            readTableFromFile(ifs, t, currentCol, currentRow, hasFoundClosingTableTag);
             fh.setTable(t);
         }
         else {
