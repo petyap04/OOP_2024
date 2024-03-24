@@ -17,13 +17,14 @@ enum class ErrorList {
     no_error
 };
 
-enum class TypeOfTags{
+enum class TypeOfTags {
     table,
     th,
     tr,
-    td, 
+    td,
     is_not_tag
 };
+
 TypeOfTags& defineTag(TypeOfTags& t, char ch) {
     switch (ch) {
     case 'a':t = TypeOfTags::table; break;
@@ -36,7 +37,7 @@ TypeOfTags& defineTag(TypeOfTags& t, char ch) {
 }
 
 Table::Table() = default;
-Table:: Table(size_t countOfColls, size_t countOfRows, const Row* rows) {
+Table::Table(size_t countOfColls, size_t countOfRows, const Row* rows) {
     setCountOfColls(countOfColls);
     setCountOfRows(countOfRows);
 }
@@ -45,7 +46,7 @@ void Table::swapTwoRows(int index1, int index2) {
     std::swap(rows[index1], rows[index2]);
 }
 
-void Table:: writeRowInTable(Row& r, const Row& rowToAdd, size_t size) {
+void Table::writeRowInTable(Row& r, const Row& rowToAdd, size_t size) {
     for (int i = 0; i < size; i++) {
         strcpy(r.row[i], rowToAdd.row[i]);
     }
@@ -94,7 +95,20 @@ void Table::edit(int rowNumber, int colNumber, const Field& f) {
 void Table::print()const {
     for (int i = 1; i <= countOfRows; i++) {
         for (int j = 1; j < countOfColls; j++) {
-            std::cout << rows[i].row[j];
+            int currentIndex = strlen(rows[i].row[j]);
+            if (i == 1) {
+                std::cout << '*' << rows[i].row[j];
+                while (currentIndex < (int)rows[i].row[0]) {
+                    std::cout << " ";
+                }
+                std::cout << "*";
+            }
+            else {
+                std::cout << rows[i].row[j];
+                while (currentIndex < (int)rows[i].row[0]) {
+                    std::cout << " ";
+                }
+            }
         }
     }
 }
@@ -127,11 +141,18 @@ bool Table::setCountOfRows(size_t rows) {
         return false;
     }
 }
+void Table::setFieldInRow(char ch, size_t indexOfRow, size_t indexOfColl) {
+    rows[indexOfRow].row[indexOfColl][0] = ch;
+}
 bool Table::setFieldInRow(const char* str, size_t indexOfRow, size_t indexOfColl) {
     if (!str) {
         return false;
     }
     strcpy(rows[indexOfRow].row[indexOfColl], str);
+    if (strlen(str) > (int)rows[indexOfRow].row[0]) {
+        setFieldInRow(strlen(str), indexOfRow, 0);
+    }
+    return true;
 }
 
 
@@ -160,8 +181,10 @@ public:
         return err;
     }
 
+
+
 };
-void defTag(std::ifstream& ifs, TypeOfTags& tag, bool isClosingTag) {
+void defTag(std::ifstream& ifs, TypeOfTags& tag, bool& isClosingTag) {
     char ch1 = ifs.get();
     if (ch1 == '<') {
         ch1 = ifs.get();
@@ -200,24 +223,16 @@ bool characterEntityReference(char* buffer) {
 void readTextBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t currentCol, size_t currentRow) {
     char buffer[MAX_SIZE_OF_FIELD];
     int currentIndOfBuf = 0;
-    if (tag == TypeOfTags::th) {
-        buffer[currentIndOfBuf] = '*';
-        currentIndOfBuf++;
-    }
-    
     bool isTag = false;
+
     for (int i = currentIndOfBuf; i < MAX_SIZE_OF_FIELD; i++) {
         TypeOfTags newtag;
         defTag(ifs, newtag, isTag);
-        if (newtag!=TypeOfTags::is_not_tag) {
-            if (tag == TypeOfTags::th) {
-                buffer[i] = '*';
-                buffer[i + 1] = '\0';
-            }
+        if (newtag != TypeOfTags::is_not_tag) {
+            buffer[i] = '\0';
             t.setFieldInRow(buffer, currentRow, currentCol);
             return;
         }
-
 
         size_t currentPos = ifs.tellg();
         char buffer2[SIZE_OF_CHARECTER_REFERENCE + 1];
@@ -227,33 +242,30 @@ void readTextBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, si
             ifs.clear();
             buffer[i] = indexOfCharacter(ifs);
         }
-        
+
         else {
             ifs.clear();
             ifs.seekg(currentPos);
             buffer[i] = ifs.get();
         }
-    }     
+    }
 }
 void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow);
-void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t currentCol, size_t currentRow){
+void readBetweenTags(std::ifstream& ifs, Table& t, const TypeOfTags& tag, size_t& currentCol, size_t& currentRow) {
     char buffer[MAX_SIZE_OF_FIELD];
     ifs.getline(buffer, MAX_SIZE_OF_FIELD, '>');
     if (tag == TypeOfTags::tr) {
+        currentCol = 0;
         currentRow++;
         readTableFromFile(ifs, t, currentCol, currentRow);
     }
-    else if (tag == TypeOfTags::th) {
-        currentCol++;
-        readTextBetweenTags(ifs, t, tag, currentCol, currentRow);
-    }
-    else if (tag == TypeOfTags::td) {
+    else {
         currentCol++;
         readTextBetweenTags(ifs, t, tag, currentCol, currentRow);
     }
 }
 
-void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow){
+void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t currentRow) {
     if (ifs.eof()) {
         return;
     }
@@ -265,13 +277,14 @@ void readTableFromFile(std::ifstream& ifs, Table& t, size_t currentCol, size_t c
         return;
     }
     if (!isClosingTag && tag != TypeOfTags::is_not_tag) {
-          readBetweenTags(ifs, t, tag, currentCol, currentRow);
+        readBetweenTags(ifs, t, tag, currentCol, currentRow);
     }
     else {
         ifs.seekg(currentPos + 1);
-        readTableFromFile(ifs, t, currentCol, currentRow);
     }
+    readTableFromFile(ifs, t, currentCol, currentRow);
 }
+    
 
 void readFile(FileHandler& fh, Table& t) {
     std::ifstream ifs(fh.getFile());
