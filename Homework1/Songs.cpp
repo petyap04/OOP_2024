@@ -168,7 +168,10 @@ void Song::printSong() const {
 }
 
 void printContentOfSong(const char* str) {
-    std::cout << str;
+    int size = strlen(str);
+    for (int i = 0; i < size; i++) {
+        std::cout << str[i];
+    }
 }
 
 void mixTwoSongs(Song& s1, const Song& s2) {
@@ -281,8 +284,8 @@ int main()
     Time t1(0, 2, 12);
     Time t2(0, 3, 41);
     Time t3(0, 3, 10);
-    
-    Song s1("PREADTEL",t1, "er", "rithem.txt");
+
+    Song s1("PREADTEL", t1, "er", "rithem.txt");
     Song s2("ZABRAVEN", t2, "prhr", "rithem1.txt");
     Song s3("KAMUNITE PADAT", t3, "ph", "rithem.txt");
     Song s4("CENTROFUGAa", t3, "ph", "rithem.txt");
@@ -320,6 +323,5 @@ int main()
     printContentOfSong(s1.getContent());
     printContentOfSong(s2.getContent());
     mixTwoSongs(s1, s2);
- 
-
+    printContentOfSong(s1.getContent());
 }
