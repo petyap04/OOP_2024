@@ -248,13 +248,13 @@ int main()
 		m1.printHex();
 		m1.printBinary();
 	}
-	catch (std::out_of_range) {
+	catch (std::out_of_range&) {
 		std::cout << "Invalid number" << std::endl;
 	}
-	catch (std::length_error) {
+	catch (std::length_error&) {
 		std::cout << "Not enough space" << std::endl;
 	}
-	catch (std::logic_error) {
+	catch (std::logic_error&) {
 		std::cout << "Big Error" << std::endl;
 	}
 	catch (...) {
