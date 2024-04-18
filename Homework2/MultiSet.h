@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 constexpr unsigned int BYTE_SIZE = 8;
 class MultiSet {
 	size_t countOfBuckets = 0;
@@ -6,7 +7,8 @@ class MultiSet {
 	size_t numberOfBitsNeedForOneNumber = 0;
 	uint8_t* buckets = nullptr;
 
-	bool countOfNumberIsSmallerThanTheBiggestPosible(int number);
+	unsigned int maxCountForThisBits() const;
+	bool countOfNumberIsSmallerThanTheBiggestPossible(int number);
 	void copyFrom(const MultiSet& other);
 	void free();
 	static bool isValid(unsigned int number);
@@ -28,6 +30,12 @@ public:
 	void addNumber(unsigned int number, unsigned int times);
 	unsigned int countOfNumber(size_t number) const;
 	void print()const;
+	void printHex()const;
+	void printBucketInBinary(int indexOfBucket)const;
+	void printBinary()const;
 
+	friend std::istream& operator>>(std::istream& is, MultiSet& m);
+	friend std::ostream& operator<<(std::ostream& os, const MultiSet& m);
 	friend MultiSet intersectionOfSets(const MultiSet& lhs, const MultiSet& rhs);
+	friend MultiSet addition(const MultiSet& set);
 };
