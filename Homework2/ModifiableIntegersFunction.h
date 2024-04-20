@@ -22,19 +22,19 @@ public:
 	ModifiableIntegersFunction& operator+=(const ModifiableIntegersFunction& other);
 	ModifiableIntegersFunction& operator-=(const ModifiableIntegersFunction& other);
 	friend ModifiableIntegersFunction operator+(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend ModifiableIntegersFunction operator-(const ModifiableIntegersFunction & lhs, const ModifiableIntegersFunction & rhs) ;
+	friend ModifiableIntegersFunction operator-(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 
-	friend ModifiableIntegersFunction compositionOfFunctions(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) ;
-    friend ModifiableIntegersFunction reverseFunction(const ModifiableIntegersFunction& func);
+	friend ModifiableIntegersFunction compositionOfFunctions(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend ModifiableIntegersFunction reverseFunction(const ModifiableIntegersFunction& func);
 
 	ModifiableIntegersFunction operator^(int times);
 
-	friend bool* operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend bool* operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend bool* operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend bool* operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend bool* operator==(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
-	friend bool* operator!=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator==(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool operator!=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 
 	bool injection() const;
 	bool surjection() const;
