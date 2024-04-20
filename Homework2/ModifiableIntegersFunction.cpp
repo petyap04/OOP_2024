@@ -158,7 +158,29 @@ bool* operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersF
             arr[i] = true;
         }
         else {
-            if (currentValueOfLhs > currentValueOfRhs) {
+            if (currentValueOfLhs < currentValueOfRhs) {
+                arr[i] = true;
+            }
+            else {
+                arr[i] = false;
+            }
+        }
+    }
+    return arr;
+}
+bool* operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
+    bool arr[SIZE_OF_INT16_T];
+    for (int i = 0; i < SIZE_OF_INT16_T; i++) {
+        int16_t currentValueOfLhs = lhs.arrWithValues[i];
+        int16_t currentValueOfRhs = rhs.arrWithValues[i];
+        if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
+            arr[i] = false;
+        }
+        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            arr[i] = true;
+        }
+        else {
+            if (currentValueOfLhs <= currentValueOfRhs) {
                 arr[i] = true;
             }
             else {
@@ -181,6 +203,28 @@ bool* operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersF
         }
         else {
             if (currentValueOfLhs > currentValueOfRhs) {
+                arr[i] = false;
+            }
+            else {
+                arr[i] = true;
+            }
+        }
+    }
+    return arr;
+}
+bool* operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
+    bool arr[SIZE_OF_INT16_T];
+    for (int i = 0; i < SIZE_OF_INT16_T; i++) {
+        int16_t currentValueOfLhs = lhs.arrWithValues[i];
+        int16_t currentValueOfRhs = rhs.arrWithValues[i];
+        if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
+            arr[i] = true;
+        }
+        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            arr[i] = false;
+        }
+        else {
+            if (currentValueOfLhs >= currentValueOfRhs) {
                 arr[i] = false;
             }
             else {
@@ -234,7 +278,7 @@ ModifiableIntegersFunction ModifiableIntegersFunction::operator^(int times) {
     }
     ModifiableIntegersFunction result(*this);
     while (times != 0) {
-        result=compositionOfFunctions(*this, result);
+        result = compositionOfFunctions(*this, result);
     }
     return result;
 }
