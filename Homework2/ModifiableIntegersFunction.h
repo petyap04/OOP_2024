@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 
 static const int SIZE_OF_INT16_T = 65536;
 static const int MIN_VALUE_OF_INT16_T = -32768;
@@ -16,6 +17,7 @@ public:
 	int16_t getValueOfFunc(int16_t input) const;
 	void funcModif(int16_t spacificInput, int16_t spacificOutput);
 	void excudePoint(int16_t input);
+	double slope()const;
 
 	ModifiableIntegersFunction& operator+=(const ModifiableIntegersFunction& other);
 	ModifiableIntegersFunction& operator-=(const ModifiableIntegersFunction& other);
@@ -35,6 +37,5 @@ public:
 	bool injection() const;
 	bool surjection() const;
 	bool bijection() const;
-
 
 };
