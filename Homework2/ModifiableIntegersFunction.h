@@ -30,7 +30,9 @@ public:
 	ModifiableIntegersFunction operator^(int times);
 
 	friend bool* operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool* operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 	friend bool* operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
+	friend bool* operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 	friend bool* operator==(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 	friend bool* operator!=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs);
 
