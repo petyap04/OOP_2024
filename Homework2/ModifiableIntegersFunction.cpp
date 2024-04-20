@@ -1,5 +1,5 @@
 #include <iostream>
-#include "ModifiableIntegersFunction.h"
+#include "ultra_mega_giga_trash.h"
 
 
 ModifiableIntegersFunction::ModifiableIntegersFunction(int16_t(*g)(int16_t)) {
@@ -14,8 +14,8 @@ ModifiableIntegersFunction::ModifiableIntegersFunction(int16_t(*g)(int16_t)) {
     }
 }
 
-int16_t ModifiableIntegersFunction::getValueOfFunc(int16_t input) const{
-      return arrWithValues[input - MIN_VALUE_OF_INT16_T];
+int16_t ModifiableIntegersFunction::getValueOfFunc(int16_t input) const {
+    return arrWithValues[input - MIN_VALUE_OF_INT16_T];
 }
 void ModifiableIntegersFunction::funcModif(int16_t spacificInput, int16_t spacificOutput) {
     arrWithValues[spacificInput - MIN_VALUE_OF_INT16_T] = spacificOutput;
@@ -46,7 +46,7 @@ ModifiableIntegersFunction& ModifiableIntegersFunction::operator+=(const Modifia
         if (arrWithValues[i] == NOT_DEF_POINTS_VALUE || other.arrWithValues[i] == NOT_DEF_POINTS_VALUE) {
             arrWithValues[i] = NOT_DEF_POINTS_VALUE;
         }
-        else if(arrWithValues[i] == EXCLUDE_POINTS_VALUE || other.arrWithValues[i] == EXCLUDE_POINTS_VALUE) {
+        else if (arrWithValues[i] == EXCLUDE_POINTS_VALUE || other.arrWithValues[i] == EXCLUDE_POINTS_VALUE) {
             arrWithValues[i] = EXCLUDE_POINTS_VALUE;
         }
         else {
@@ -146,127 +146,80 @@ ModifiableIntegersFunction reverseFunction(const ModifiableIntegersFunction& fun
     return result;
 }
 
-bool* operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool arr[SIZE_OF_INT16_T];
+bool operator<(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
         int16_t currentValueOfLhs = lhs.arrWithValues[i];
         int16_t currentValueOfRhs = rhs.arrWithValues[i];
         if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
+            currentValueOfLhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = true;
+        if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            currentValueOfRhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else {
-            if (currentValueOfLhs < currentValueOfRhs) {
-                arr[i] = true;
-            }
-            else {
-                arr[i] = false;
-            }
+        if (currentValueOfLhs >= currentValueOfRhs) {
+            return false;
         }
     }
-    return arr;
+    return true;
 }
-bool* operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool arr[SIZE_OF_INT16_T];
+bool operator<=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
         int16_t currentValueOfLhs = lhs.arrWithValues[i];
         int16_t currentValueOfRhs = rhs.arrWithValues[i];
         if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
+            currentValueOfLhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = true;
+        if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            currentValueOfRhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else {
-            if (currentValueOfLhs <= currentValueOfRhs) {
-                arr[i] = true;
-            }
-            else {
-                arr[i] = false;
-            }
+        if (currentValueOfLhs > currentValueOfRhs) {
+            return false;
         }
     }
-    return arr;
+    return true;
 }
-bool* operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool arr[SIZE_OF_INT16_T];
+bool operator>(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
         int16_t currentValueOfLhs = lhs.arrWithValues[i];
         int16_t currentValueOfRhs = rhs.arrWithValues[i];
         if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = true;
+            currentValueOfLhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
+        if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            currentValueOfRhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else {
-            if (currentValueOfLhs > currentValueOfRhs) {
-                arr[i] = false;
-            }
-            else {
-                arr[i] = true;
-            }
+        if (currentValueOfLhs <= currentValueOfRhs) {
+            return false;
         }
     }
-    return arr;
+    return true;
 }
-bool* operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool arr[SIZE_OF_INT16_T];
+bool operator>=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
         int16_t currentValueOfLhs = lhs.arrWithValues[i];
         int16_t currentValueOfRhs = rhs.arrWithValues[i];
         if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = true;
+            currentValueOfLhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
+        if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
+            currentValueOfRhs = MIN_VALUE_OF_INT16_T - 1;
         }
-        else {
-            if (currentValueOfLhs >= currentValueOfRhs) {
-                arr[i] = false;
-            }
-            else {
-                arr[i] = true;
-            }
+        if (currentValueOfLhs < currentValueOfRhs) {
+            return false;
         }
     }
-    return arr;
+    return true;
 }
-bool* operator==(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool arr[SIZE_OF_INT16_T];
+bool operator==(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
-        int16_t currentValueOfLhs = lhs.arrWithValues[i];
-        int16_t currentValueOfRhs = rhs.arrWithValues[i];
-        if (currentValueOfLhs == NOT_DEF_POINTS_VALUE || currentValueOfLhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
-        }
-        else if (currentValueOfRhs == NOT_DEF_POINTS_VALUE || currentValueOfRhs == EXCLUDE_POINTS_VALUE) {
-            arr[i] = false;
-        }
-        else {
-            if (currentValueOfLhs == currentValueOfRhs) {
-                arr[i] = true;
-            }
-            else {
-                arr[i] = false;
-            }
+        if (lhs.arrWithValues[i] != rhs.arrWithValues[i]) {
+            return false;
         }
     }
-    return arr;
+    return true;
 }
-bool* operator!=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
-    bool* arr = (lhs == rhs);
-    for (int i = 0; i < SIZE_OF_INT16_T; i++) {
-        if (arr[i] == true) {
-            arr[i] = false;
-        }
-        else {
-            arr[i] = true;
-        }
-    }
-    return arr;
+bool operator!=(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
+    return !(lhs == rhs);
 }
 
 ModifiableIntegersFunction ModifiableIntegersFunction::operator^(int times) {
@@ -287,7 +240,7 @@ bool areParallel(const ModifiableIntegersFunction& lhs, const ModifiableIntegers
     return lhs.slope() == rhs.slope();
 }
 
-void readFromFile(std::istream& is,  ModifiableIntegersFunction& func) {
+void readFromFile(std::istream& is, ModifiableIntegersFunction& func) {
     is.read((char*)&func, sizeof(func));
 }
 void writeInFile(std::ostream& os, const ModifiableIntegersFunction& func) {
@@ -308,5 +261,5 @@ int main()
     std::cout << m1.getValueOfFunc(1) << std::endl;
 
     std::cout << m1.injection() << std::endl;
-    
+
 }
