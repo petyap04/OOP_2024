@@ -23,6 +23,23 @@ void ModifiableIntegersFunction::funcModif(int16_t spacificInput, int16_t spacif
 void ModifiableIntegersFunction::excudePoint(int16_t input) {
     arrWithValues[input - MIN_VALUE_OF_INT16_T] = EXCLUDE_POINTS_VALUE;
 }
+double ModifiableIntegersFunction::slope()const {
+    int16_t x1 = 0;
+    while (true) {
+        if (arrWithValues[x1] != NOT_DEF_POINTS_VALUE && arrWithValues[x1] != EXCLUDE_POINTS_VALUE) {
+            break;
+        }
+        x1++;
+    }
+    int16_t x2 = x1 + 1;
+    while (true) {
+        if (arrWithValues[x2] != NOT_DEF_POINTS_VALUE && arrWithValues[x2] != EXCLUDE_POINTS_VALUE) {
+            break;
+        }
+        x2++;
+    }
+    return (double)(arrWithValues[x2] - arrWithValues[x1]) / (x2 - x1);
+}
 
 ModifiableIntegersFunction& ModifiableIntegersFunction::operator+=(const ModifiableIntegersFunction& other) {
     for (int i = 0; i < SIZE_OF_INT16_T; i++) {
@@ -215,7 +232,22 @@ ModifiableIntegersFunction ModifiableIntegersFunction::operator^(int times) {
     if (times == -1) {
         return reverseFunction(*this);
     }
+    ModifiableIntegersFunction result(*this);
+    while (times != 0) {
+        result=compositionOfFunctions(*this, result);
+    }
+    return result;
+}
 
+bool areParallel(const ModifiableIntegersFunction& lhs, const ModifiableIntegersFunction& rhs) {
+    return lhs.slope() == rhs.slope();
+}
+
+void readFromFile(std::istream& is,  ModifiableIntegersFunction& func) {
+    is.read((char*)&func, sizeof(func));
+}
+void writeInFile(std::ostream& os, const ModifiableIntegersFunction& func) {
+    os.write((const char*)&func, sizeof(func));
 }
 
 int16_t f(int16_t x) {
@@ -234,6 +266,3 @@ int main()
     std::cout << m1.injection() << std::endl;
     
 }
-
-
-
