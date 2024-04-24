@@ -69,6 +69,9 @@ MultiSet::MultiSet(size_t n, size_t numberOfBitsNeedForOneNumber) {
 MultiSet::MultiSet(const MultiSet& other) {
 	copyFrom(other);
 }
+MultiSet::~MultiSet() {
+	free();
+}
 MultiSet& MultiSet::operator=(const MultiSet& other) {
 	if (this != &other) {
 		free();
