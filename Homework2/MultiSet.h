@@ -21,6 +21,7 @@ public:
 	MultiSet() = default;
 	MultiSet(size_t n, size_t numberOfBitsNeedForOneNumber);
 	MultiSet(const MultiSet& other);
+        ~MultiSet();
 
 	MultiSet& operator=(const MultiSet& other);
 
