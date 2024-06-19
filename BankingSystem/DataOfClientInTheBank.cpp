@@ -1,12 +1,14 @@
 #include "DataOfClientInTheBank.h"
 
 
-const Client& DataOfClientInTheBank::getClient() const
+const Client* DataOfClientInTheBank::getClient() const
 {
 	return client;
 }
 
-DataOfClientInTheBank::DataOfClientInTheBank(const Client& client) : client(client) {}
+DataOfClientInTheBank::DataOfClientInTheBank(const Client& client) {
+	this->client = &client;
+}
 
 int DataOfClientInTheBank::hasAccountWithThatNumber(unsigned accountNumber) const
 {

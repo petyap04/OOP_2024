@@ -2,10 +2,13 @@
 #include "Employee.h"
 class DataOfEmployeeOfTheBank
 {
-	const Employee& employee;
+	Employee* employee;
 public:
 	DataOfEmployeeOfTheBank() = default;
-	DataOfEmployeeOfTheBank(const Employee& employee);
-	const Employee& getEmployee()const;
+	DataOfEmployeeOfTheBank(Employee& employee);
+	const Employee* getEmployee()const;
+	unsigned countOfTasks()const;
+	void addTask(Task* task);
+	friend class Employee;
 };
 

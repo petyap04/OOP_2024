@@ -19,4 +19,3 @@ public:
 	CommandExecutor& operator=(const CommandExecutor&) = delete;
 };
 
-//static Polymorphic_Ptr<Command> create();

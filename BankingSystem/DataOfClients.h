@@ -14,5 +14,6 @@ public:
 	int indexClientWithThatName(const char* firstName, const char* secondName) const;
 	void addClient(const Client& c);
 	friend class Bank;
+	friend class System;
 };
 

@@ -13,7 +13,7 @@ private:
 		Account() = default;
 		Account(unsigned accountNumber, double availableMoney);
 	};
-	const Client& client;
+	const Client* client;
 	Vector<Account> accounts;
 
 public:
@@ -22,7 +22,7 @@ public:
 	int hasAccountWithThatNumber(unsigned accountNumber)const;
 	unsigned openNewAccount();
 	void closeAccount(unsigned accountNumber);
-	const Client& getClient()const;
+	const Client* getClient()const;
 	friend class DataOfClients;
 	friend class System;
 };

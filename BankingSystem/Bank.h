@@ -16,7 +16,8 @@ public:
 	void setName(const char* name);
 	bool isTheNameOfTheBankTheSame(const char* name)const;
 	void addClient(const Client& c);
-	void addEmployee(const Employee& c);
+	void addEmployee(Employee& c);
+	void giveTaskToTheEmployeeWithTheLeastTasks(Task* task);
 	friend class System;
 };
 

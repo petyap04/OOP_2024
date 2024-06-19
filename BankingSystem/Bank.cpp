@@ -19,7 +19,12 @@ void Bank::addClient(const Client& c)
     clientsOfBank.addClient(c);
 }
 
-void Bank::addEmployee(const Employee& e)
+void Bank::addEmployee(Employee& e)
 {
     employeesOfBank.addEmployee(e);
+}
+
+void Bank::giveTaskToTheEmployeeWithTheLeastTasks(Task* task)
+{
+    employeesOfBank.giveTaskToTheEmployeeWithTheLeastTasks(task);
 }

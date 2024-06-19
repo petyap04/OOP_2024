@@ -20,7 +20,7 @@ const DataOfClientInTheBank DataOfClients::operator[](int ind) const
 }
 
 
-DataOfClientInTheBank DataOfClients::operator[](usigned ind) const
+DataOfClientInTheBank DataOfClients::operator[](int ind) 
 {
 	if (ind < 0 || ind >= clients.getSize()) {
 		throw std::exception("error");

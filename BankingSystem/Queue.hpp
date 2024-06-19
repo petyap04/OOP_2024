@@ -31,14 +31,6 @@ public:
     ~Queue();
 };
 
-int main() {
-    Queue<int>q;
-    q.push(3);
-    q.push(7);
-    q.push(11);
-    std::cout << q.peek();
-}
-
 template<class T>
 void Queue<T>::copyFrom(const Queue<T>& other)
 {
