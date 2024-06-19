@@ -8,14 +8,14 @@ const Client& DataOfClientInTheBank::getClient() const
 
 DataOfClientInTheBank::DataOfClientInTheBank(const Client& client) : client(client) {}
 
-bool DataOfClientInTheBank::hasAccountWithThatNumber(unsigned accountNumber) const
+int DataOfClientInTheBank::hasAccountWithThatNumber(unsigned accountNumber) const
 {
 	for (int i = 0; i < accounts.getSize(); i++) {
 		if (accountNumber == accounts[i].accountNumber) {
-			return true;
+			return i;
 		}
 	}
-	return false;
+	return -1;
 }
 
 unsigned DataOfClientInTheBank::openNewAccount()

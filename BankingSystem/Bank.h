@@ -11,9 +11,12 @@ private:
 	DataOfClients clientsOfBank;
 	DataOfEmployees employeesOfBank;
 public:
+	Bank() = default;
 	Bank(const char* name);
+	void setName(const char* name);
 	bool isTheNameOfTheBankTheSame(const char* name)const;
 	void addClient(const Client& c);
 	void addEmployee(const Employee& c);
+	friend class System;
 };
 

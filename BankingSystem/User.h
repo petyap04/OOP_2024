@@ -18,4 +18,5 @@ public:
 	bool amITheUserYouAreSearchingFor(const char* firstName, const char* secondName, const char* password)const;
 	virtual User* clone()const = 0;
 	virtual ~User() = default;
+	friend class System;
 };

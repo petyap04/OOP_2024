@@ -16,6 +16,8 @@ public:
 	UsersContainer(const UsersContainer& other) = delete;
 	UsersContainer& operator=(const UsersContainer& other) = delete;
 
+	User* operator[](unsigned index);
+	const User* operator[](unsigned index)const;
 	int indexOfUser(const char* firstName, const char* secondName, const char* password)const;
 	void addUser(User*&& u);
 	const User* getUser(unsigned ind)const;

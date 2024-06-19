@@ -17,10 +17,13 @@ private:
 	Vector<Account> accounts;
 
 public:
+	DataOfClientInTheBank() = default;
 	DataOfClientInTheBank(const Client& client);
-	bool hasAccountWithThatNumber(unsigned accountNumber)const;
+	int hasAccountWithThatNumber(unsigned accountNumber)const;
 	unsigned openNewAccount();
 	void closeAccount(unsigned accountNumber);
 	const Client& getClient()const;
+	friend class DataOfClients;
+	friend class System;
 };
 

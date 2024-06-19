@@ -10,6 +10,24 @@ int DataOfClients::indexClientWithThatName(const char* firstName, const char* se
 	return -1;
 }
 
+
+const DataOfClientInTheBank DataOfClients::operator[](int ind) const
+{
+	if (ind < 0 || ind >= clients.getSize()) {
+		throw std::exception("error");
+	}
+	return clients[ind];
+}
+
+
+DataOfClientInTheBank DataOfClients::operator[](usigned ind) const
+{
+	if (ind < 0 || ind >= clients.getSize()) {
+		throw std::exception("error");
+	}
+	return clients[ind];
+}
+
 void DataOfClients::addClient(const Client& c)
 {
 	clients.pushBack(c);

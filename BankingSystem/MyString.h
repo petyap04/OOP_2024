@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <fstream>
+#pragma warning (disable : 4996)
+
 class MyString
 {
 private:

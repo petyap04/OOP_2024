@@ -47,6 +47,16 @@ UsersContainer::UsersContainer()
 	container = new User * [capacity];
 }
 
+User* UsersContainer::operator[](unsigned index)
+{
+	return container[index];
+}
+
+const User* UsersContainer::operator[](unsigned index) const
+{
+	return container[index];
+}
+
 int UsersContainer::indexOfUser(const char* firstName, const char* secondName, const char* password) const
 {
 	for (int i = 0; i < users; i++) {
