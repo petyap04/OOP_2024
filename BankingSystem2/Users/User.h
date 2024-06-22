@@ -14,12 +14,13 @@ protected:
 public:
 	User() = default;
 	User(const MyString& firstName, const MyString& secondName, unsigned IDNumber, unsigned age, const MyString& password);
-	bool isThePasswordRight(const char* password)const;
+	bool isThePasswordRight(const MyString& password)const;
 	const MyString& getFirstName()const;
 	const MyString& getSecondName()const;
 	bool amITheUserYouAreSearchingFor(const User* user)const;
-	bool amITheUserYouAreSearchingFor(const char* firstName, const char* secondName)const;
-	bool amITheUserYouAreSearchingFor(const char* firstName, const char* secondName, const char* password)const;
+	bool amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName)const;
+	bool amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName, const MyString& password)const;
+	operator bool() const;
 
 	friend std::ifstream& operator>>(std::ifstream& ifs, User* user);
 	friend std::ofstream& operator<<(std::ofstream& ofs, const User* user);

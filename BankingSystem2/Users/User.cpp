@@ -4,9 +4,9 @@
 User::User(const MyString& firstName, const MyString& secondName, unsigned IDNumber, unsigned age, const MyString& password):
     firstName(firstName),secondName(secondName), IDNumber(IDNumber), age(age),password(password){}
 
-bool User::isThePasswordRight(const char* password) const
+bool User::isThePasswordRight(const MyString& password) const
 {
-    return strcmp(password,this->password.getData()) == 0;
+    return password == this->password;
 }
 
 const MyString& User::getFirstName() const
@@ -21,21 +21,24 @@ const MyString& User::getSecondName() const
 
 bool User::amITheUserYouAreSearchingFor(const User* user) const
 {
-    return strcmp(user->getFirstName().getData(), this->firstName.getData()) == 0 &&
-           strcmp(user->getSecondName().getData(), this->secondName.getData()) == 0;
+    return user->getFirstName() == this->firstName && user->getSecondName() == this->secondName;
 }
 
-bool User::amITheUserYouAreSearchingFor(const char* firstName, const char* secondName) const
+bool User::amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName) const
 {
-    return strcmp(firstName, this->firstName.getData()) == 0 && 
-           strcmp(secondName, this->secondName.getData()) == 0;
+    return firstName == this->firstName && secondName == this->secondName;
 }
 
-bool User::amITheUserYouAreSearchingFor(const char* firstName, const char* secondName, const char* password) const
+bool User::amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName, const MyString& password) const
 {
-    return strcmp(firstName, this->firstName.getData()) == 0 &&
-           strcmp(secondName, this->secondName.getData()) == 0 &&
-           strcmp(password, this->password.getData()) == 0;
+    return firstName == this->firstName && secondName == this->secondName && password == this->password;
+}
+
+User::operator bool() const
+{
+    return strcmp("", this->firstName.getData()) != 0 &&
+           strcmp("", this->secondName.getData()) != 0 &&
+           strcmp("", this->password.getData()) != 0;
 }
 
 std::ifstream& operator>>(std::ifstream& ifs, User* user)
