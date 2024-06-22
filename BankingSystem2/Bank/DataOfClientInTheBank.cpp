@@ -20,12 +20,35 @@ int DataOfClientInTheBank::hasAccountWithThatNumber(unsigned accountNumber) cons
 	return -1;
 }
 
-unsigned DataOfClientInTheBank::openNewAccount()
+bool DataOfClientInTheBank::amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName) const
 {
-	//tryabva da se vavedat danni v accounta
-	Account newAccount;
+	return client->amITheUserYouAreSearchingFor(firstName,secondName);
+}
+
+void DataOfClientInTheBank::listAllAccountAClientHasInTheBank(const Client& client) const
+{
+	for (int i = 0; i < accounts.getSize(); i++) {
+		std::cout << accounts[i].accountNumber << std::endl;
+	}
+}
+
+void DataOfClientInTheBank::openNewAccount(unsigned& lastAccountNumberGiven)
+{
+	Account newAccount(lastAccountNumberGiven,0);
 	accounts.pushBack(newAccount);
-	return newAccount.accountNumber;
+	lastAccountNumberGiven++;
+}
+
+void DataOfClientInTheBank::closeAccount(unsigned accountNumber)
+{
+	int ind = hasAccountWithThatNumber(accountNumber);
+	if (ind < 0) {
+		throw std::exception("You cannot close an account that does not exist");
+	}
+	for (int i = ind; i < accounts.getSize() - 1; i++) {
+		accounts[i] = accounts[i + 1];
+	}
+	accounts.popBack();
 }
 
 

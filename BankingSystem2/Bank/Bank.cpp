@@ -1,17 +1,23 @@
 #include "../h/Bank.h"
 
-Bank::Bank(const char* name): name(name) {}
+Bank::Bank(const MyString& name): name(name) {}
 
-void Bank::setName(const char* name)
+void Bank::setName(const MyString& name)
 {
-    if (name) {
-        this->name = name;
+    try {
+        if (name) {
+            this->name = name;
+        }
+        throw std::exception("The name shouldn't be nullptr!");
+    }
+    catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
     }
 }
 
-bool Bank::hasSameName(const char* name) const
+bool Bank::hasSameName(const MyString& name) const
 {
-    return strcmp(this->name.getData(), name) == 0;
+    return this->name == name;
 }
 
 void Bank::addClient(const Client& c)
@@ -29,7 +35,7 @@ void Bank::giveTaskToTheEmployeeWithTheLeastTasks(Task* task)
     employeesOfBank.giveTaskToTheEmployeeWithTheLeastTasks(task);
 }
 
-int Bank::getIndexOfClientWithThatName(const char* firstName, const char* secondName) const
+int Bank::getIndexOfClientWithThatName(const MyString& firstName, const MyString& secondName) const
 {
     unsigned size = clientsOfBank.clients.getSize();
     for (int i = 0; i < size; i++) {
@@ -39,3 +45,14 @@ int Bank::getIndexOfClientWithThatName(const char* firstName, const char* second
     }
     return -1;
 }
+
+void Bank::listAllAccountAClientHasInTheBank(const Client& client) const
+{
+    int ind = getIndexOfClientWithThatName(client.getFirstName(), client.getSecondName();
+    if (ind < 0) {
+        return;
+    }
+    clientsOfBank[ind].listAllAccountAClientHasInTheBank(client);
+}
+
+

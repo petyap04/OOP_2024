@@ -9,13 +9,15 @@ private:
 	DataOfEmployees employeesOfBank;
 public:
 	Bank() = default;
-	Bank(const char* name);
-	void setName(const char* name);
-	bool hasSameName(const char* name)const;
+	Bank(const MyString& name);
+	void setName(const MyString& name);
+	bool hasSameName(const MyString& name)const;
 	void addClient(const Client& c);
 	void addEmployee(Employee& c);
 	void giveTaskToTheEmployeeWithTheLeastTasks(Task* task);
-	int getIndexOfClientWithThatName(const char* firstName, const char* secondName)const;
+	int getIndexOfClientWithThatName(const MyString& firstName, const MyString& secondName)const;
+	void listAllAccountAClientHasInTheBank(const Client& client)const;
+
 
 	friend class System;
 	friend class CommandFromClient;

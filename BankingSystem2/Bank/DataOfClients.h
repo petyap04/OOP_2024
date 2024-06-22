@@ -9,7 +9,7 @@ private:
 public:
 	const DataOfClientInTheBank operator[](int ind)const;
 	DataOfClientInTheBank operator[](int ind);
-	int indexClientWithThatName(const char* firstName, const char* secondName) const;
+	int indexClientWithThatName(const MyString& firstName, const MyString& secondName) const;
 	void addClient(const Client& c);
 	friend class Bank;
 	friend class System;

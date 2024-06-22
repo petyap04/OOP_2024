@@ -1,15 +1,14 @@
 #include "../h/DataOfClients.h"
 
-int DataOfClients::indexClientWithThatName(const char* firstName, const char* secondName) const
+int DataOfClients::indexClientWithThatName(const MyString& firstName, const MyString& secondName) const
 {
 	for (int i = 0; i < clients.getSize(); i++) {
-		if (clients[i].getClient().amITheUserYouAreSearchingFor(firstName, secondName)) {
+		if (clients[i].amITheUserYouAreSearchingFor(firstName, secondName)) {
 			return i;
 		}
 	}
 	return -1;
 }
-
 
 const DataOfClientInTheBank DataOfClients::operator[](int ind) const
 {
