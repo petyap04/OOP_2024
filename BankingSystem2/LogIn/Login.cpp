@@ -1,11 +1,11 @@
 #include "../h/Login.h"
 #include <fstream>
 #include <sstream>
-void LoginCommand::registerUser(const MyString& firstName, const MyString& secondName, const MyString& password, unsigned id, unsigned age)
+
+void Login::registerUser(const MyString& firstName, const MyString& secondName, const MyString& password, const MyString& possition, unsigned id, unsigned age)
 {
 	// validation
-	const MyString currentPossition("Client");
-	currentUser = createUser(firstName, secondName, currentPossition, id, age, password);
+	currentUser = createUser(firstName, secondName, possition, id, age, password);
 	users.pushBack(currentUser);
 
 	std::ofstream ofs("userDataBase.txt", std::ios::app);
@@ -16,7 +16,8 @@ void LoginCommand::registerUser(const MyString& firstName, const MyString& secon
 	ofs << currentUser << '\n';
 	ofs.close();
 }
-void LoginCommand::login(unsigned id, const MyString& password)
+
+void Login::login(unsigned id, const MyString& password)
 {
 	const char* filename = "userDataBase.txt";
 	std::ifstream ifs(filename);
@@ -46,17 +47,17 @@ void LoginCommand::login(unsigned id, const MyString& password)
 				currentUser = user;
 			}
 			else {
-				std::cout << "Invalid Password for id " << currentId;
+				throw std::exception("Invalid Password for id ");
 			}
 		}
 	}
 	if (!currentUser) {
 		throw std::exception("");
 	}
-
+	System& inst = System::getInstance(ifs, std::move(users), std::move(currentUser));
 }
 
-void LoginCommand::signIn(unsigned id, const MyString& password)
+void Login::signIn(unsigned id, const MyString& password)
 {
 	try {
 		login(id, password);
@@ -66,17 +67,19 @@ void LoginCommand::signIn(unsigned id, const MyString& password)
 	}
 }
 
-void LoginCommand::signupUser(const MyString& firstName, const MyString& secondName, const MyString& password, unsigned id, unsigned age)
+void Login::signupUser(const MyString& firstName, const MyString& secondName, const MyString& password, const MyString& possition,  unsigned id, unsigned age)
 {
 	try {
 		login(id, password);
 	}
 	catch (...) {
-		registerUser(firstName, secondName, password,  id, age);
+		registerUser(firstName, secondName, password, possition, id, age);
+		System& inst = System::getInstance();
+		inst.addUser(currentUser);
 	}
 }
 
-User* LoginCommand::getUser()
+User* Login::getUser()
 {
 	return currentUser;
 }
