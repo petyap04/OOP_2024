@@ -9,16 +9,34 @@ private:
 	Vector<Polymorphic_Ptr<User>> usersContainer;
 	Vector<Bank> banks_container;
 	User* currentUser = nullptr;
+	System() = default;
 public:
-	//как трябва да се достигне от logIn до system
-	System(const char* fileName);
-	void create_bank(const char* nameOfTheBank);
+	static System& getInstance(std::ifstream& ifs, Vector<Polymorphic_Ptr<User>>&& users, User*&& curr) {
+		static System system;
+		system.usersContainer = users;
+		system.currentUser = curr;
+		ifs >> system.banks_container;
+		return system;
+	}
+	static System& getInstance() {
+		static System system;
+		return system;
+	}
+	void create_bank(const MyString& nameOfTheBank);
 
-	unsigned check_avl(const char* bank_name, unsigned int account_number)const;
-	int returnTheIndexOfTheBankWithThatName(const char* name)const;
+	unsigned check_avl(const MyString& bank_name, unsigned int account_number)const;
+
+	int returnTheIndexOfTheBankWithThatName(const MyString& name)const;
 	int returnTheIndexOfCurrentUserInABank(int indOfBank)const;
+	Bank getBankOnIndex(unsigned ind);
+	User* getCurrentUser();
+
+
+	void listAllAccountAClientHas(const Client& client)const;
+	void addUser(User*&& user);
+
+
 	void whoami()const;
 	void exit();
-	friend class CommandFromClient;
 };
 

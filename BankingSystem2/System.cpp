@@ -1,23 +1,7 @@
 #include "System.h"
 #include <iostream>
 
-System::System(const char* fileName)
-{
-	try {
-		std::ifstream ifs(fileName);
-		if (!ifs.is_open()) {
-			throw std::exception("There is problem with the file");
-		}
-		else {
-			ifs >> usersContainer;
-		}
-	}
-	catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
-	}
-}
-
-void System::create_bank(const char* nameOfTheBank)
+void System::create_bank(const MyString& nameOfTheBank)
 {
 	try {
 		banks_container.pushBack(Bank(nameOfTheBank));
@@ -27,12 +11,9 @@ void System::create_bank(const char* nameOfTheBank)
 	}
 }
 
-unsigned System::check_avl(const char* bank_name, unsigned int account_number) const
+unsigned System::check_avl(const MyString& bank_name, unsigned int account_number) const
 {
 	try {
-		if (indexOfCurrentUser < 0) {
-			throw std::exception("You need to be loged in the system to check your account in the bank");
-		}
 		int indOfBank = returnTheIndexOfTheBankWithThatName(bank_name);
 		if (indOfBank < 0) {
 			throw std::exception("There is no bank with that name");
@@ -54,10 +35,10 @@ unsigned System::check_avl(const char* bank_name, unsigned int account_number) c
 	}
 }
 
-int System::returnTheIndexOfTheBankWithThatName(const char* name) const
+int System::returnTheIndexOfTheBankWithThatName(const MyString& name) const
 {
 	for (int i = 0; i < banks_container.getSize(); i++) {
-		if (banks_container[i].isTheNameOfTheBankTheSame(name)) {
+		if (banks_container[i].hasSameName(name)) {
 			return i;
 		}
 	}
@@ -66,18 +47,41 @@ int System::returnTheIndexOfTheBankWithThatName(const char* name) const
 
 int System::returnTheIndexOfCurrentUserInABank(int indOfBank) const
 {
-	for (int i = 0; i < users_container.getSize(); i++) {
-		if (users_container[i]->amITheUserYouAreSearchingFor(currentUser)) {
+	for (int i = 0; i < usersContainer.getSize(); i++) {
+		if (usersContainer[i]->amITheUserYouAreSearchingFor(currentUser)) {
 			return i;
 		}
 	}
 	return -1;
 }
 
+Bank System::getBankOnIndex(unsigned ind)
+{
+	return banks_container[ind];
+}
+
+User* System::getCurrentUser()
+{
+	return currentUser;
+}
+
+void System::listAllAccountAClientHas(const Client& client) const
+{
+	for (int i = 0; i < banks_container.getSize(); i++) {
+		banks_container[i].listAllAccountAClientHasInTheBank(client);
+	}
+}
+
+void System::addUser(User*&& user)
+{
+	usersContainer.pushBack(user);
+}
+
 void System::whoami() const
 {
+	///opravi
 	try {
-		if (indexOfCurrentUser < 0) {
+		if (currentUser) {
 			throw std::exception("You need to be loged in the system to check your info");
 		}
 		else {
@@ -95,12 +99,18 @@ void System::whoami() const
 void System::exit()
 {
 	try {
-		if (indexOfCurrentUser < 0) {
+		if (currentUser) {
 			throw std::exception("You need to be loged in the system to exit");
 		}
 		else {
 			currentUser = nullptr;
-			indexOfCurrentUser = -1;
+			std::ofstream ofs("userDataBase.txt");
+			if (!ofs.is_open()) {
+				throw std::exception("Problem with openning of the file!");
+			}
+			operator<<(ofs, usersContainer);
+			operator<<(ofs, banks_container);
+			ofs.close();
 		}
 	}
 	catch (std::exception& e) {
