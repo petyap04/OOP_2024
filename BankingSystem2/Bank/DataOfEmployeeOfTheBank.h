@@ -5,7 +5,7 @@ class DataOfEmployeeOfTheBank
 	Employee* employee;
 public:
 	DataOfEmployeeOfTheBank() = default;
-	DataOfEmployeeOfTheBank(Employee& employee);
+	DataOfEmployeeOfTheBank(Employee* employee);
 	const Employee* getEmployee()const;
 	unsigned countOfTasks()const;
 	void addTask(Task* task);

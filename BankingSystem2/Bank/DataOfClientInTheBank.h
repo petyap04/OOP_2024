@@ -18,12 +18,15 @@ private:
 
 public:
 	DataOfClientInTheBank() = default;
-	DataOfClientInTheBank(const Client& client);
+	DataOfClientInTheBank(const Client* client);
 	int hasAccountWithThatNumber(unsigned accountNumber)const;
 	bool amITheUserYouAreSearchingFor(const MyString& firstName, const MyString& secondName)const;
-	void listAllAccountAClientHasInTheBank(const Client& client)const;
+	void listAllAccountAClientHasInTheBank()const;
+
 	void openNewAccount(unsigned& lastAccountNumberGiven);
+	void openNewAccount(unsigned accountNumber, unsigned money);
 	void closeAccount(unsigned accountNumber);
+
 	const Client* getClient()const;
 	friend class DataOfClients;
 	friend class System;

@@ -6,8 +6,8 @@ const Client* DataOfClientInTheBank::getClient() const
 	return client;
 }
 
-DataOfClientInTheBank::DataOfClientInTheBank(const Client& client) {
-	this->client = &client;
+DataOfClientInTheBank::DataOfClientInTheBank(const Client* client) {
+	this->client = client;
 }
 
 int DataOfClientInTheBank::hasAccountWithThatNumber(unsigned accountNumber) const
@@ -25,7 +25,7 @@ bool DataOfClientInTheBank::amITheUserYouAreSearchingFor(const MyString& firstNa
 	return client->amITheUserYouAreSearchingFor(firstName,secondName);
 }
 
-void DataOfClientInTheBank::listAllAccountAClientHasInTheBank(const Client& client) const
+void DataOfClientInTheBank::listAllAccountAClientHasInTheBank() const
 {
 	for (int i = 0; i < accounts.getSize(); i++) {
 		std::cout << accounts[i].accountNumber << std::endl;
@@ -37,6 +37,12 @@ void DataOfClientInTheBank::openNewAccount(unsigned& lastAccountNumberGiven)
 	Account newAccount(lastAccountNumberGiven,0);
 	accounts.pushBack(newAccount);
 	lastAccountNumberGiven++;
+}
+
+void DataOfClientInTheBank::openNewAccount(unsigned accountNumber, unsigned money)
+{
+	Account newAccount(accountNumber, money);
+	accounts.pushBack(newAccount);
 }
 
 void DataOfClientInTheBank::closeAccount(unsigned accountNumber)

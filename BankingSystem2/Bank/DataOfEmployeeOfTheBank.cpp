@@ -1,8 +1,8 @@
 #include "../h/DataOfEmployeeOfTheBank.h"
 
-DataOfEmployeeOfTheBank::DataOfEmployeeOfTheBank(Employee& employee) 
+DataOfEmployeeOfTheBank::DataOfEmployeeOfTheBank(Employee* employee) 
 {
-	this->employee = &employee;
+	this->employee = employee;
 }
 
 const Employee* DataOfEmployeeOfTheBank::getEmployee() const

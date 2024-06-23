@@ -27,7 +27,36 @@ DataOfClientInTheBank DataOfClients::operator[](int ind)
 	return clients[ind];
 }
 
-void DataOfClients::addClient(const Client& c)
+void DataOfClients::openAccount(const Client* client)
+{
+	int ind = indexClientWithThatName(client->getFirstName(), client->getSecondName());
+	if (ind < 0) {
+		addClient(client);
+		ind = indexClientWithThatName(client->getFirstName(), client->getSecondName());
+	}
+	clients[ind].openNewAccount(lastAccountNumberGiven);
+}
+
+void DataOfClients::openAccount(const Client* client, unsigned accountNumber, unsigned money)
+{
+	int ind = indexClientWithThatName(client->getFirstName(), client->getSecondName());
+	if (ind < 0) {
+		addClient(client);
+		ind = indexClientWithThatName(client->getFirstName(), client->getSecondName());
+	}
+	clients[ind].openNewAccount(accountNumber, money);
+}
+
+void DataOfClients::closeAccount(const Client* client, unsigned accountNumber)
+{
+	int ind = indexClientWithThatName(client->getFirstName(), client->getSecondName());
+	if (ind < 0) {
+		throw std::exception("You need to have an account to close it");
+	}
+	clients[ind].closeAccount(accountNumber);
+}
+
+void DataOfClients::addClient(const Client* c)
 {
 	clients.pushBack(c);
 }

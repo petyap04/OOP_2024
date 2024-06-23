@@ -1,6 +1,6 @@
 #include "../h/DataOfEmployees.h"
 
-int DataOfEmployees::indexEmployeesWithThatName(const char* firstName, const char* secondName) const
+int DataOfEmployees::indexEmployeesWithThatName(const MyString& firstName, const MyString& secondName) const
 {
     for (int i = 0; i < employees.getSize(); i++) {
         if (employees[i].getEmployee()->amITheUserYouAreSearchingFor(firstName,secondName)) {
@@ -10,12 +10,12 @@ int DataOfEmployees::indexEmployeesWithThatName(const char* firstName, const cha
     return -1;
 }
 
-void DataOfEmployees::addEmployee(Employee& e)
+void DataOfEmployees::addEmployee(Employee* e)
 {
     employees.pushBack(e);
 }
 
-void DataOfEmployees::giveTaskToTheEmployeeWithTheLeastTasks(Task* task)
+unsigned DataOfEmployees::giveTaskToTheEmployeeWithTheLeastTasks(Task* task)
 {
     int countOfEmployees = employees.getSize();
     int indexOfCurrEmployeeWithTheLeastTasks = 0;
@@ -28,4 +28,5 @@ void DataOfEmployees::giveTaskToTheEmployeeWithTheLeastTasks(Task* task)
         }
     }
     employees[indexOfCurrEmployeeWithTheLeastTasks].addTask(task);
+    return theLeastTasks;
 }

@@ -9,8 +9,13 @@ private:
 public:
 	const DataOfClientInTheBank operator[](int ind)const;
 	DataOfClientInTheBank operator[](int ind);
+
+	void openAccount(const Client* client);
+	void openAccount(const Client* client, unsigned accountNumber, unsigned money);
+	void closeAccount(const Client* client, unsigned accountNumber);
+
 	int indexClientWithThatName(const MyString& firstName, const MyString& secondName) const;
-	void addClient(const Client& c);
+	void addClient(const Client* c);
 	friend class Bank;
 	friend class System;
 };
