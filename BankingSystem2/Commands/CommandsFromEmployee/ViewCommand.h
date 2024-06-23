@@ -1,12 +1,11 @@
 #pragma once
 #include "../CommandFromEmployee.h"
 
-class ApproveCommand : public CommandFromEmployee
+class ViewCommand : public CommandFromEmployee
 {
-private:
-	unsigned ind;
+	unsigned taskID;
 public:
-	ApproveCommand( unsigned ind);
+	ViewCommand(unsigned taskID);
 	void execute()override;
 	virtual Command* clone() const;
 };
