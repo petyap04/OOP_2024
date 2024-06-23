@@ -6,17 +6,14 @@ Client::Client(const MyString& firstName, const MyString& secondName, unsigned I
 
 void Client::messages() const
 {
-    std::ifstream ifs(messagesFile.getData());
-    if (!ifs.is_open()) {
-        throw std::exception("There has been problem with the opening of the file!");
+    for (int i = 0; i < container_messages.getSize(); i++) { 
+        std::cout << i + 1 << container_messages[i].getMessage() << std::endl;
     }
-    unsigned int currNumber = '2';
-    while (!ifs.eof()) {
-        char buffer[1024];
-        ifs.get(buffer, currNumber);
-        std::cout << buffer << std::endl;
-        currNumber += '1';
-    }
+}
+
+void Client::addMessage(Message&& message)
+{
+    container_messages.pushBack(message);
 }
 
 void Client::list() const

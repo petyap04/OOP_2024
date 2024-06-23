@@ -8,6 +8,20 @@ void Employee::addTask(Task* task)
     tasks.pushBack(task);
 }
 
+void Employee::doTask(unsigned ind)
+{
+    tasks[ind].get()->doTask();
+}
+void Employee::dontDoTask(unsigned ind) 
+{
+    tasks[ind].get()->dontDoTask();
+}
+
+Task* Employee::getTask(unsigned ind)
+{
+    return tasks[ind].get();
+}
+
 User* Employee::clone() const
 {
     return new Employee(*this);
@@ -16,6 +30,29 @@ User* Employee::clone() const
 unsigned Employee::getCountOfTasks() const
 {
     return tasks.getSize();
+}
+
+void Employee::printTasks() const
+{
+    for (int i = 0; i < tasks.getSize(); i++) {
+        tasks[i].get()->printTask();
+    }
+}
+
+void Employee::printTaskAtIndex(unsigned ind) const
+{
+    if (ind < tasks.getSize()) {
+        tasks[ind].get()->printTask();
+    }
+    std::out_of_range("The index is out of range!");
+}
+
+void Employee::theTaskHasBeenDone(unsigned ind)
+{
+    for (int i = ind; i < tasks.getSize() - 1; i++) {
+        tasks[i] = tasks[i + 1];
+    }
+    tasks.popBack();
 }
 
 std::ifstream& operator>>(std::ifstream& ifs, Employee* employee)
