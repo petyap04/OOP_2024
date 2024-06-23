@@ -55,7 +55,7 @@ int System::returnTheIndexOfCurrentUserInABank(int indOfBank) const
 	return -1;
 }
 
-Bank System::getBankOnIndex(unsigned ind)
+Bank& System::getBankOnIndex(unsigned ind)
 {
 	return banks_container[ind];
 }
@@ -63,6 +63,17 @@ Bank System::getBankOnIndex(unsigned ind)
 User* System::getCurrentUser()
 {
 	return currentUser;
+}
+
+Bank& System::getBankWhereEmployeeIsWorking(const Employee* e) 
+{
+	for (int i = 0; i < banks_container.getSize(); i++) {
+		int ind = banks_container[i].employeesOfBank.indexEmployeesWithThatName(e->getFirstName(), e->getSecondName());
+		if (ind > 0) {
+			return banks_container[i];
+		}
+	}
+	throw std::exception("There is no employee with that name");
 }
 
 void System::listAllAccountAClientHas(const Client& client) const

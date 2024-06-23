@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "Bank/h/Bank.h"
+#include "Helpers/Vector.hpp"
 
 class System
 {
@@ -28,9 +29,9 @@ public:
 
 	int returnTheIndexOfTheBankWithThatName(const MyString& name)const;
 	int returnTheIndexOfCurrentUserInABank(int indOfBank)const;
-	Bank getBankOnIndex(unsigned ind);
+	Bank& getBankOnIndex(unsigned ind);
 	User* getCurrentUser();
-
+	Bank& getBankWhereEmployeeIsWorking(const Employee* e);
 
 	void listAllAccountAClientHas(const Client& client)const;
 	void addUser(User*&& user);
