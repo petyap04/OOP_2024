@@ -24,6 +24,7 @@ public:
         ~MultiSet();
 
 	MultiSet& operator=(const MultiSet& other);
+        ~MultiSet();
 
 	size_t getSize()const;
 	const uint8_t* getBuckets()const;
