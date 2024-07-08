@@ -3,15 +3,6 @@
 template <class T>
 class Deque
 {
-	T* data = nullptr;
-	size_t size = 0;
-	size_t capacity = 0;
-	int front = -1;
-	int rear = -1;
-	void copyFrom(const Deque<T>& other);
-	void moveFrom(Deque<T>&& other);
-	void free();
-	void resize(size_t newCap);
 public:
 	Deque();
 	Deque(const Deque<T>& other);
@@ -34,6 +25,17 @@ public:
 	bool isEmpty()const;
 
 	~Deque();
+private:
+	T* data = nullptr;
+	size_t size = 0;
+	size_t capacity = 0;
+	int front = -1;
+	int rear = -1;
+	void copyFrom(const Deque<T>& other);
+	void moveFrom(Deque<T>&& other);
+	void free();
+	void resize(size_t newCap);
+
 };
 
 template<class T>
@@ -198,6 +200,7 @@ void Deque<T>::popAtFront()
 		front %= capacity;
 		size--;
 	}
+	throw std::exception("error");
 }
 
 template<class T>
@@ -211,6 +214,7 @@ void Deque<T>::popAtBack()
 		rear %= capacity;
 		size--;
 	}
+	throw std::exception("error");
 }
 
 template<class T>
