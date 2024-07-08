@@ -5,8 +5,6 @@
 template <class T, class Container = Deque<T>>
 class Queue
 {
-protected:
-	Container c{};
 public:
 	Queue() = default;
 	Queue(const Container& c);
@@ -18,6 +16,8 @@ public:
 	void pop();
 
 	bool isEmpty()const;
+protected:
+	Container c{};
 };
 
 
