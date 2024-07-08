@@ -4,8 +4,6 @@
 
 template <class T, class Container = Deque<T>>
 class Stack {
-protected:
-	Container c;
 public:
 	Stack() = default;
 	Stack(const Container& c);
@@ -15,6 +13,8 @@ public:
 	void pop();
 	const T& peek() const;
 	bool isEmpty()const;
+protected:
+	Container c;
 };
 
 
