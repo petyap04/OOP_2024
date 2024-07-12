@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <deque>
 template <class T>
 class Deque
 {
@@ -35,7 +36,6 @@ private:
 	void moveFrom(Deque<T>&& other);
 	void free();
 	void resize(size_t newCap);
-
 };
 
 template<class T>
@@ -43,9 +43,9 @@ void Deque<T>::copyFrom(const Deque<T>& other)
 {
 	size = other.size;
 	capacity = other.capacity;
-	data = new T[capacity];
-	for (int i = 0; i < capacity; i++) {
-		data[i] = other.data[i];
+	data = static_cast<T*>(std::malloc(capacity * sizeof(T)));
+	for (size_t i = 0; i < size; i++) {
+		new (&data[i]) T(other.data[(other.front + i) % other.capacity]);
 	}
 	front = other.front;
 	rear = other.rear;
@@ -67,7 +67,12 @@ void Deque<T>::moveFrom(Deque<T>&& other)
 template<class T>
 void Deque<T>::free()
 {
-	delete[]data;
+	if (data) {
+		for (size_t i = 0; i < size; ++i) {
+			data[(front + i) % capacity].~T();
+		}
+		std::free(data);
+	}
 	data = nullptr;
 	size = capacity = front = rear = 0;
 }
@@ -75,12 +80,12 @@ void Deque<T>::free()
 template<class T>
 void Deque<T>::resize(size_t newCap)
 {
-	T* newData = new T[newCap];
-	for (int i = 0; i < size; i++) {
-		newData[i] = data[front++];
-		front %= size;
+	T* newData = static_cast<T*>(std::malloc(newCap * sizeof(T)));
+	for (size_t i = 0; i < size; ++i) {
+		new (&newData[i]) T(std::move(data[(front + i) % capacity]));
+		data[(front + i) % capacity].~T();
 	}
-	delete[]data;
+	std::free(data);
 	data = newData;
 	capacity = newCap;
 	front = 0;
@@ -91,7 +96,7 @@ template<class T>
 Deque<T>::Deque()
 {
 	capacity = 8;
-	data = new T[capacity];
+	data = static_cast<T*>(std::malloc(capacity * sizeof(T)));
 }
 
 template<class T>
@@ -139,8 +144,8 @@ void Deque<T>::pushAtFront(const T& elem)
 		front = 1;
 		rear = 0;
 	}
-	front--;
-	data[front] = elem;
+	front = (front - 1 + capacity) % capacity;
+	new (&data[front]) T(elem);
 	size++;
 }
 
@@ -157,8 +162,8 @@ void Deque<T>::pushAtFront(T&& elem)
 		front = 1;
 		rear = 0;
 	}
-	front--;
-	data[front] = std::move(elem);
+	front = (front - 1 + capacity) % capacity;
+	new (&data[front]) T(std::move(elem));
 	size++;
 }
 
@@ -171,9 +176,8 @@ void Deque<T>::pushAtBack(const T& elem)
 	if (rear == -1) {
 		front = 0;
 	}
-	rear++;
-	rear %= capacity;
-	data[rear] = elem;
+	rear = (rear + 1) % capacity;
+	new (&data[rear]) T(elem);
 	size++;
 }
 
@@ -186,9 +190,8 @@ void Deque<T>::pushAtBack(T&& elem)
 	if (rear == -1) {
 		front = 0;
 	}
-	rear++;
-	rear %= capacity;
-	data[rear] = std::move(elem);
+	rear = (rear + 1) % capacity;
+	new (&data[rear]) T(std::move(elem));
 	size++;
 }
 
@@ -196,25 +199,26 @@ template<class T>
 void Deque<T>::popAtFront()
 {
 	if (!isEmpty()) {
-		front++;
-		front %= capacity;
+		data[front].~T();
+		front = (front + 1) % capacity;
 		size--;
 	}
-	throw std::exception("error");
+	else {
+		throw std::runtime_error("Deque is empty");
+	}
 }
 
 template<class T>
 void Deque<T>::popAtBack()
 {
 	if (!isEmpty()) {
-		if (rear == 0) {
-			rear = capacity;
-		}
-		rear--;
-		rear %= capacity;
+		data[rear].~T();
+		rear = (rear - 1 + capacity) % capacity;
 		size--;
 	}
-	throw std::exception("error");
+	else {
+		throw std::runtime_error("Deque is empty");
+	}
 }
 
 template<class T>
@@ -223,7 +227,7 @@ const T& Deque<T>::peekAtFront() const
 	if (!isEmpty()) {
 		return data[front];
 	}
-	throw std::exception("error");
+	throw std::runtime_error("Deque is empty");
 }
 
 template<class T>
@@ -232,7 +236,7 @@ const T& Deque<T>::peekAtBack() const
 	if (!isEmpty()) {
 		return data[rear];
 	}
-	throw std::exception("error");
+	throw std::runtime_error("Deque is empty");
 }
 
 template<class T>
@@ -246,3 +250,4 @@ Deque<T>::~Deque()
 {
 	free();
 }
+
